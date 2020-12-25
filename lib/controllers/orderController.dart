@@ -2,7 +2,6 @@ import 'package:flutter_web2/models/order.dart';
 
 import 'package:flutter_web2/controllers/authController.dart';
 import 'package:flutter_web2/controllers/userController.dart';
-import 'package:flutter_web2/models/order.dart';
 import 'package:flutter_web2/services/fireDb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -22,15 +21,14 @@ class OrderController extends GetxController {
   @override
   @mustCallSuper
   void onInit() async {
-    //var fireUser = Get.find<AuthController>().user;
+    var fireUser = Get.find<AuthController>().user;
     clear();
 
-    Get.find<UserController>().user =
-        await FireDb().getUser(uid: Get.find<AuthController>().user.uid);
-    var user = Get.find<UserController>().user;
-
-    orderList.bindStream(FireDb().orderStream(user.id));
-
+    if (fireUser != null) {
+      await FireDb().getUser(uid: Get.find<AuthController>().user.uid);
+      var user = Get.find<UserController>().user;
+      orderList.bindStream(FireDb().orderStream(user.id));
+    }
     allOrderList.bindStream(FireDb().allOrderStreamByStatus(
         status: orderStatus.value,
         sortingName: orderBySortingName

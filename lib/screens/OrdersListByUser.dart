@@ -66,7 +66,7 @@ class OrdersListByUser extends StatelessWidget {
                 return InkWell(
                   onTap: () {
                     Get.to(OrderDetail(
-                      orderId: element.id,
+                      order: element,
                     ));
                   },
                   child: Card(

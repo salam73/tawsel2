@@ -24,10 +24,10 @@ class UsersLayout extends StatelessWidget {
   // var userList = FireDb().getUsers();
 
   final OrderController orderController = Get.put(OrderController());
-  final AuthController _authController = Get.find();
+  // final AuthController _authController = Get.find();
   final ThemeController _themeController = Get.put(ThemeController());
 
-  final UserModel userModel = Get.put(UserModel());
+  // final UserModel userModel = Get.put(UserModel());
   getLightIcon() {
     if (_themeController.themeChange) {
       return Icon(Icons.lightbulb);
@@ -70,12 +70,6 @@ class UsersLayout extends StatelessWidget {
               },
             ),
           ),
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              _authController.logOut();
-            },
-          ),
         ],
       ),
       body: Center(
@@ -91,19 +85,6 @@ class UsersLayout extends StatelessWidget {
                 children: snapshot.data.docs.map((e) {
                   return InkWell(
                     onTap: () {
-                      // orderController.userId = 'ePVan9xf2YNpIiPPWkGgdF3wwf62';
-
-                      //  print(userModel.name);
-                      // e['isAdmin']
-                      //     ? Get.to(HomeAdmin(
-                      //         userId: e.id,
-                      //       ))
-                      //     : Get.to(OrdersListByUser(
-                      //         userId: e.id,
-                      //       ));
-                      // Get.to(OrdersListByUser(
-                      // //  userId: e.id,
-                      // ));
                       print(e.id.toString());
 
                       orderController.clientId.value = e.id;
@@ -115,11 +96,11 @@ class UsersLayout extends StatelessWidget {
                       padding: EdgeInsets.all(5.0),
                       child: Container(
                         // alignment: Alignment.center,
-                        height: 140,
-                        width: 200,
+                        width: MediaQuery.of(context).size.width * 0.29,
+                        height: MediaQuery.of(context).size.height * 0.25,
                         color: Colors.amberAccent,
                         child: Padding(
-                          padding: const EdgeInsets.all(15),
+                          padding: EdgeInsets.all(15),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -127,14 +108,17 @@ class UsersLayout extends StatelessWidget {
                                 alignment: Alignment.centerRight,
                                 child: Text(
                                   '${e['name']}',
-                                  style: TextStyle(fontSize: 25),
+                                  style: TextStyle(fontSize: 20),
                                 ),
+                              ),
+                              Divider(
+                                color: Colors.black,
                               ),
                               Container(
                                 alignment: Alignment.centerRight,
                                 child: Text(
                                   '${e['shopName']}',
-                                  style: TextStyle(fontSize: 25),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                               ),
                             ],

@@ -15,78 +15,28 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(order.orderId),
-      background: Container(
-          color: Colors.blue,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Icon(Icons.edit),
-              ),
-            ],
-          )),
-      secondaryBackground: Container(
-          color: Colors.red,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Icon(Icons.delete),
-              ),
-            ],
-          )),
-      direction: DismissDirection.horizontal,
-      dragStartBehavior: DragStartBehavior.start,
-      confirmDismiss: (direction) async {
-        if (direction == DismissDirection.startToEnd) {
-          OrderAlert().editOrderDialog(order);
-          return false;
-        } else {
-          return true;
-        }
+    return InkWell(
+      onTap: () {
+        Get.to(OrderDetail(order: order));
       },
-      onDismissed: (direction) {
-        if (direction == DismissDirection.endToStart) {
-          FireDb().deleteOrder(order, uid);
-        }
-      },
-      // child: Text('here is the card')
       child: Card(
+        color: Colors.green,
         margin: EdgeInsets.fromLTRB(10, 2.5, 10, 2.5),
         child: Container(
           margin: EdgeInsets.all(5),
           child: ListTile(
-            /*leading: Checkbox(
-              value: order.done,
-              onChanged: (newValue) {
-                order.done = newValue;
-                FireDb().updateOrder(
-                  order,
-                  uid,
-                );
-              },
-            ),*/
-            title: InkWell(
-              onTap: () {
-                //OrderAlert().editOrderDialog(order);
-                Get.to(OrderDetail(orderId: order.orderId));
-              },
-              child: Row(
-                children: [
-                  Text(
-                    order.orderNumber,
-                    style: TextStyle(
+            leading: Text(order.status),
+            title: Row(
+              children: [
+                Text(
+                  order.orderNumber,
+                  style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      // color: (order.) ? Colors.green : Colors.red
-                    ),
+                     // color: (order.done) ? Colors.green : Colors.white
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
