@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_web2/models/order.dart';
 import 'package:flutter_web2/models/user.dart';
 
-// All FireStore Opration in This Class
 class FireDb {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<bool> createNewUser(UserModel user) async {
@@ -10,6 +9,7 @@ class FireDb {
       await _firestore.collection("users").doc(user.id).set({
         "name": user.name,
         "email": user.email,
+        "password": user.password,
         "shopName": user.shopName,
         "shopAddress": user.shopAddress,
         'phoneNumber': user.phoneNumber,
@@ -56,6 +56,7 @@ class FireDb {
     try {
       await _firestore.collection("users").doc(uid).collection("orders").add({
         'dateCreated': Timestamp.now(),
+        'byUserId': uid,
         // 'content': content ?? '',
         'done': false,
         'orderNumber': orderNumber ?? '',
@@ -123,6 +124,7 @@ class FireDb {
   }
 
   Stream<List<OrderModel>> orderStream(String uid) {
+    print('user id' + uid);
     return _firestore
         .collection("users")
         .doc(uid)
@@ -139,10 +141,11 @@ class FireDb {
   }
 
   Stream<List<OrderModel>> allOrderStreamByStatus(
-      {String status, String sortingName}) {
+      {String status, String sortingName, String clientId}) {
     return _firestore
         .collection("orders")
         .where('status', isEqualTo: status ?? '')
+        .where('byUserId', isEqualTo: clientId ?? '')
         .orderBy(sortingName ?? 'dateCreated', descending: true)
         .snapshots()
         .map((QuerySnapshot query) {

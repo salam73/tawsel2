@@ -4,7 +4,7 @@ class OrderModel {
   // String content;
   String orderId;
   Timestamp dateCreated;
-  bool done;
+  // bool done;
 
   String orderNumber;
   String byUserId;
@@ -18,33 +18,35 @@ class OrderModel {
   int amountAfterDelivery;
   String orderType;
   String commit;
-
+/*
   bool isPickup;
   bool isReturn;
-  bool isSolve;
+  bool isSolve;*/
 
   String status;
   String statusTitle;
 
   OrderModel(
       // this.content,
-      {this.orderId,
-      this.byUserId,
-      this.dateCreated,
-      this.done,
-      this.orderNumber,
-      this.deliveryToCity,
-      this.customerName,
-      this.customerAddress,
-      this.customerPhone,
-      this.amountAfterDelivery,
-      this.orderType,
-      this.commit,
-      this.status,
-      this.statusTitle,
-      this.isPickup,
-      this.isReturn,
-      this.isSolve});
+      {
+    this.orderId,
+    this.byUserId,
+    this.dateCreated,
+    // this.done,
+    this.orderNumber,
+    this.deliveryToCity,
+    this.customerName,
+    this.customerAddress,
+    this.customerPhone,
+    this.amountAfterDelivery,
+    this.orderType,
+    this.commit,
+    this.status,
+    this.statusTitle,
+    // this.isPickup,
+    // this.isReturn,
+    // this.isSolve
+  });
 
   OrderModel.fromDocumentSnapshot(
     DocumentSnapshot documentSnapshot,
@@ -53,7 +55,7 @@ class OrderModel {
     // content = documentSnapshot["content"];
     byUserId = documentSnapshot["byUserId"];
     dateCreated = documentSnapshot["dateCreated"];
-    done = documentSnapshot["done"];
+    // done = documentSnapshot["done"];
     orderNumber = documentSnapshot["orderNumber"];
     //
     deliveryToCity = documentSnapshot["deliveryToCity"];
@@ -65,9 +67,9 @@ class OrderModel {
     commit = documentSnapshot["commit"];
     status = documentSnapshot["status"];
     statusTitle = documentSnapshot["statusTitle"];
-    isPickup = documentSnapshot["isPickup"];
+    /*  isPickup = documentSnapshot["isPickup"];
     isReturn = documentSnapshot["isReturn"];
-    isSolve = documentSnapshot["isSolve"];
+    isSolve = documentSnapshot["isSolve"];*/
   }
 
   Map<String, dynamic> toJson() {
@@ -76,7 +78,7 @@ class OrderModel {
     // data['content'] = this.content;
     data['byUserId'] = this.byUserId;
     data['dateCreated'] = this.dateCreated;
-    data['done'] = this.done;
+    // data['done'] = this.done;
     data['orderNumber'] = this.orderNumber;
 
     data['deliveryToCity'] = this.deliveryToCity;
@@ -88,9 +90,9 @@ class OrderModel {
     data['commit'] = this.commit;
     data['status'] = this.status;
     data['statusTitle'] = this.statusTitle;
-    data['isPickup'] = this.isPickup;
+    /* data['isPickup'] = this.isPickup;
     data['isReturn'] = this.isReturn;
-    data['isSolve'] = this.isSolve;
+    data['isSolve'] = this.isSolve;*/
     return data;
   }
 }

@@ -39,6 +39,7 @@ class AuthController extends GetxController {
       UserModel _user = UserModel(
           id: userCredential.user.uid,
           email: userCredential.user.email,
+          password: password,
           name: name,
           shopName: shopName,
           shopAddress: shopAddress,

@@ -176,12 +176,12 @@ class OrderInput extends StatelessWidget {
                 DropDownField(
                   controller: cityName,
                   onValueChanged: (dynamic value) {
-                    cityName = value;
+                    cityName.text = value;
 
                     // print(value);
                   },
                   icon: Icon(Icons.ac_unit),
-                  value: cityName,
+                  value: cityName.text,
                   required: true,
                   hintText: 'أختر مدينة',
                   labelText: 'المدن',

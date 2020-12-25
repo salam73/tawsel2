@@ -1,7 +1,7 @@
 import 'package:flutter_web2/controllers/authController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-//import 'package:todo_app/controllers/authController.dart';
+import 'package:flutter_web2/controllers/authController.dart';
 import 'signup.dart';
 
 class Login extends GetWidget<AuthController> {

@@ -14,75 +14,35 @@ import 'dart:ui' as ui;
 
 import 'package:flutter_web2/services/fireDb.dart';
 
-class MainTest extends StatelessWidget {
-/*   Future<Widget> getUsers() async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .orderBy('deliveryToCity', descending: true)
-        .get()
-        .then((e) => {
-              e.docs.map(
-                (e) => Text(
-                  e.data()['shopName'],
-                ),
-              )
-            });
-    return Text('hel');
-  } */
-
-  // ignore: unused_element
-  _onPressed() {
-    FirebaseFirestore.instance
-        .collection("users")
-        // .orderBy('deliveryToCity')
-        .get()
-        .then((querySnapshot) {
-      querySnapshot.docs.forEach((result) {
-        print('userid' + result.id);
-
-//.set({'statusTitle': 'non'}, SetOptions(merge: true))
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(result.id)
-            .collection('orders')
-            .get()
-            .then((value) => {
-                  value.docs.forEach((element) {
-                    print('orderid' + element.id);
-                    FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(result.id)
-                        .collection('orders')
-                        .doc(element.id)
-                        .set({'status': 'non'}, SetOptions(merge: true)).then(
-                            (value) => {});
-                  })
-                });
-      });
-    });
-  }
-
-  var sumOfAmount = 0.obs;
-  var orderStatus = ''.obs;
-  var _value = 0.obs;
+// ignore: must_be_immutable
+class TableByUserId extends StatelessWidget {
+  var sumOfAmountOBX = 0.obs;
+  var orderStatusOBX = ''.obs;
+  var headerStatusOBX = ''.obs;
+  var orderTitleStatusOBX = ''.obs;
+  var _valueOBX = 0.obs;
 
   String orderCondition = '';
   var fireDb = FireDb();
 
-  var _listOption = ['مؤجل', 'واصل', 'راجع', 'جاهز', 'مشكلة'];
+  var _listOption = ['واصل', 'راجع', 'مؤجل', 'قيد الإرسال'];
 
   OrderModel orderModel = OrderModel();
   OrderController orderController = Get.put(OrderController());
+  var statusTitleController = TextEditingController();
 
   void getAllAmount({String status, String sortingByName}) {
-    orderStatus.value = status;
+    headerStatusOBX.value = status;
+    sumOfAmountOBX.value = 0;
+    int start = 0;
     var g = fireDb.allOrderStreamByStatus(
-        status: status, sortingName: sortingByName);
+        status: status,
+        sortingName: sortingByName,
+        clientId: orderController.clientId.value);
     g.forEach((element) {
-      int start = 0;
       element.forEach((element) {
         start = start + element.amountAfterDelivery;
-        sumOfAmount.value = start;
+        sumOfAmountOBX.value = start;
         // print('foreach' + start.toString());
       });
     });
@@ -90,9 +50,14 @@ class MainTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // orderController.clientId.value = clientId;
+    orderController.streamStatus(
+        status: orderController.orderStatus.value,
+        orderByName: orderController.orderBySortingName.value,
+        clientId: orderController.clientId.value);
     getAllAmount(
-        status: Get.find<OrderController>().orderStatus.value,
-        sortingByName: Get.find<OrderController>().orderBySortingName.value);
+        status: orderController.orderStatus.value,
+        sortingByName: orderController.orderBySortingName.value);
     //_onPressed();
     // orderController.orderStatus.value = 'non';
     return Directionality(
@@ -107,7 +72,7 @@ class MainTest extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    orderStatus.toString(),
+                    headerStatusOBX.toString(),
                     style: TextStyle(fontSize: 25),
                   ),
                   SizedBox(
@@ -123,6 +88,7 @@ class MainTest extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
+
             //Obx(() => Text(orderController.allOrders.length.toString())),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -135,21 +101,21 @@ class MainTest extends StatelessWidget {
                     status: 'جاهز',
                   ),
                   statusButton(
-                      title: 'راجع',
-                      controller: orderController,
-                      status: 'راجع'),
-                  statusButton(
                       title: 'واصل',
                       controller: orderController,
                       status: 'واصل'),
+                  statusButton(
+                      title: 'راجع',
+                      controller: orderController,
+                      status: 'راجع'),
                   statusButton(
                       title: 'مؤجل',
                       controller: orderController,
                       status: 'مؤجل'),
                   statusButton(
-                      title: 'قيد التسليم',
+                      title: 'قيد الإرسال',
                       controller: orderController,
-                      status: 'مشكلة'),
+                      status: 'قيد الإرسال'),
                   SizedBox(
                     height: 20,
                   )
@@ -161,42 +127,41 @@ class MainTest extends StatelessWidget {
             ),
 
             //جدول المعلومات
-            Obx(() => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      child: Text('Nr.'),
-                    ),
-                    headerTitle(
-                        arbTitle: 'الرقم',
-                        engTitle: 'orderNumber',
-                        controller: orderController),
-                    headerTitle(
-                        arbTitle: 'الإسم',
-                        engTitle: 'customerName',
-                        controller: orderController),
-                    headerTitle(
-                        arbTitle: 'المحافظة',
-                        engTitle: 'deliveryToCity',
-                        controller: orderController),
-                    headerTitle(
-                        arbTitle: 'المبلغ',
-                        engTitle: 'amountAfterDelivery',
-                        controller: orderController),
-                    headerTitle(
-                        arbTitle: 'التاريخ',
-                        engTitle: 'dateCreated',
-                        controller: orderController),
-                    orderStatus.value != 'تمت'
-                        ? Expanded(
-                            child: Text('الحالة'),
-                          )
-                        : Container()
-                  ],
-                )),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: Text('Nr.'),
+                ),
+                headerTitle(
+                    arbTitle: 'الرقم',
+                    engTitle: 'orderNumber',
+                    controller: orderController),
+                headerTitle(
+                    arbTitle: 'الإسم',
+                    engTitle: 'customerName',
+                    controller: orderController),
+                headerTitle(
+                    arbTitle: 'المحافظة',
+                    engTitle: 'deliveryToCity',
+                    controller: orderController),
+                headerTitle(
+                    arbTitle: 'المبلغ',
+                    engTitle: 'amountAfterDelivery',
+                    controller: orderController),
+                headerTitle(
+                    arbTitle: 'التاريخ',
+                    engTitle: 'dateCreated',
+                    controller: orderController),
+                Expanded(
+                  child: Text('الحالة'),
+                )
+              ],
+            ),
             Divider(
               thickness: 1,
               color: Colors.black,
@@ -266,50 +231,104 @@ class MainTest extends StatelessWidget {
                                 Expanded(
                                     child: InkWell(
                                   onTap: () {
-                                    print(orderController
-                                        .allOrders[index].orderId);
-                                    print(orderStatus);
-                                    print(_value.value);
+                                    // print(orderController
+                                    //     .allOrders[index].orderId);
+                                    // print(orderStatusOBX);
+                                    // print(_valueOBX.value);
+                                    // print('orderTitleStatusOBX ' +
+                                    //     orderTitleStatusOBX.value);
+
+                                    _valueOBX.value = 0;
+                                    orderTitleStatusOBX.value = '';
+                                    statusTitleController.text = '';
+                                    orderStatusOBX.value = 'واصل';
 
                                     Get.defaultDialog(
 
                                         //confirm: Text('ok'),
+                                        textCancel: 'إلغاء',
+                                        onCancel: null,
                                         textConfirm: 'ok',
                                         confirmTextColor: Colors.white,
                                         onConfirm: () {
                                           orderModel =
                                               orderController.allOrders[index];
                                           orderModel.status =
-                                              _listOption[_value.value];
+                                              _listOption[_valueOBX.value];
+                                          orderModel.statusTitle =
+                                              statusTitleController.text;
+
+                                          // statusTitleController.text
 
                                           FireDb().updateOrder2(
                                               orderModel,
                                               orderController
                                                   .allOrders[index].orderId);
-                                          print(_listOption[_value.value]);
+
+                                          orderController.streamStatus(
+                                              status: orderController
+                                                  .orderStatus.value,
+                                              orderByName: orderController
+                                                  .orderBySortingName.value,
+                                              clientId: orderController
+                                                  .clientId.value);
+
+                                          print(_listOption[_valueOBX.value]);
                                           Get.back();
                                         },
                                         title:
-                                            'نغير حالة الطلب :${orderController.allOrders[index].orderNumber}',
+                                            'تغير حالة الطلب إلى :${orderController.allOrders[index].orderNumber}',
                                         content: Column(
                                           children: <Widget>[
-                                            for (int i = 0; i < 5; i++)
+                                            for (int i = 0;
+                                                i < _listOption.length;
+                                                i++)
                                               ListTile(
                                                 title: Text(
                                                   _listOption[i],
                                                 ),
                                                 leading: Obx(() => Radio(
                                                       value: i,
-                                                      groupValue: _value.value,
+                                                      groupValue:
+                                                          _valueOBX.value,
                                                       activeColor:
                                                           Color(0xFF6200EE),
                                                       onChanged: (value) {
-                                                        _value.value = value;
+                                                        _valueOBX.value = value;
+                                                        // orderStatus.value =
+                                                        //     _listOption[value];
+                                                        orderTitleStatusOBX
+                                                                .value =
+                                                            _listOption[value];
+                                                        orderStatusOBX.value =
+                                                            _listOption[value];
+                                                        // statusTitleController.text= _listOption[value];
 
-                                                        print(_value);
+                                                        print(_valueOBX);
+                                                        print(
+                                                            'orderStatusOBX.value' +
+                                                                orderStatusOBX
+                                                                    .value);
                                                       },
                                                     )),
                                               ),
+                                            Obx(() => orderStatusOBX.value !=
+                                                    'واصل'
+                                                ? TextField(
+                                                    controller:
+                                                        statusTitleController,
+                                                    decoration: InputDecoration(
+                                                      labelText:
+                                                          orderTitleStatusOBX
+                                                              .value,
+                                                      labelStyle: TextStyle(
+                                                          fontSize: 14),
+                                                      hintStyle: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 10),
+                                                    ),
+                                                  )
+                                                : Container())
                                           ],
                                         ),
                                         middleText: orderController
@@ -343,7 +362,7 @@ class MainTest extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('المجموع: '),
-                Obx(() => Text(sumOfAmount.value.toString())),
+                Obx(() => Text(sumOfAmountOBX.value.toString())),
               ],
             ),
             SizedBox(
@@ -364,8 +383,10 @@ class MainTest extends StatelessWidget {
       child: Text(title),
       onPressed: () {
         controller.orderStatus.value = status;
+        // orderStatus.value = status;
 
-        controller.streamStatus(status: status);
+        controller.streamStatus(
+            status: status, clientId: orderController.clientId.value);
         getAllAmount(status: status);
       },
     );
@@ -384,7 +405,9 @@ class MainTest extends StatelessWidget {
               sortingByName: engTitle,
               status: orderController.orderStatus.value);
           controller.streamStatus(
-              orderByName: engTitle, status: orderController.orderStatus.value);
+              orderByName: engTitle,
+              status: orderController.orderStatus.value,
+              clientId: orderController.clientId.value);
         },
         child: Text(arbTitle),
       ),

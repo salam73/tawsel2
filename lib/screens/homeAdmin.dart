@@ -50,6 +50,7 @@ class HomeAdmin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(userId);
     return Scaffold(
       appBar: AppBar(
         title: getUserName(),
@@ -111,6 +112,7 @@ class HomeAdmin extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (_, index) {
+                    print(snapshot.data.docs[index]);
                     return Column(
                       children: [
                         Text(DateFormat('yyyy-MM-dd')

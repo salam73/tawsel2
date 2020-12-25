@@ -4,6 +4,7 @@ class UserModel {
   String id;
   String name;
   String email;
+  String password;
 
   String shopName;
   String shopAddress;
@@ -20,6 +21,7 @@ class UserModel {
       this.shopName,
       this.shopAddress,
       this.phoneNumber,
+      this.password,
       // this.isShopOwner,
       // this.isDeliveryBoy,
       // this.isDeliveryProvince,
@@ -30,6 +32,7 @@ class UserModel {
     this.id = userSnapShot.id;
     this.name = userSnapShot['name'];
     this.email = userSnapShot['email'];
+    this.password = userSnapShot['password'];
     this.shopName = userSnapShot['shopName'];
     this.shopAddress = userSnapShot['shopAddress'];
     this.phoneNumber = userSnapShot['phoneNumber'];

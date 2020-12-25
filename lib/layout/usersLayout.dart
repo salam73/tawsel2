@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_web2/layout/tableByUserId.dart';
 import 'package:get/get.dart';
 import 'package:flutter_web2/controllers/authController.dart';
 import 'package:flutter_web2/controllers/orderController.dart';
@@ -55,20 +56,20 @@ class UsersLayout extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          // Obx(
-          //   () => IconButton(
-          //     icon: getLightIcon(),
-          //     onPressed: () {
-          //       if (Get.isDarkMode) {
-          //         Get.changeTheme(ThemeData.light());
-          //         _themeController.themeChange = false;
-          //       } else {
-          //         Get.changeTheme(ThemeData.dark());
-          //         _themeController.themeChange = true;
-          //       }
-          //     },
-          //   ),
-          // ),
+          Obx(
+            () => IconButton(
+              icon: getLightIcon(),
+              onPressed: () {
+                if (Get.isDarkMode) {
+                  Get.changeTheme(ThemeData.light());
+                  _themeController.themeChange = false;
+                } else {
+                  Get.changeTheme(ThemeData.dark());
+                  _themeController.themeChange = true;
+                }
+              },
+            ),
+          ),
           IconButton(
             icon: Icon(Icons.exit_to_app),
             onPressed: () {
@@ -86,7 +87,7 @@ class UsersLayout extends StatelessWidget {
                 return CircularProgressIndicator();
               }
               return Wrap(
-                direction: Axis.vertical,
+                // direction: Axis.vertical,
                 children: snapshot.data.docs.map((e) {
                   return InkWell(
                     onTap: () {
@@ -104,13 +105,18 @@ class UsersLayout extends StatelessWidget {
                       // //  userId: e.id,
                       // ));
                       print(e.id.toString());
-                      Get.to(MainTest());
+
+                      orderController.clientId.value = e.id;
+                      orderController.orderStatus.value = 'جاهز';
+
+                      Get.to(TableByUserId());
                     },
                     child: Padding(
                       padding: EdgeInsets.all(5.0),
                       child: Container(
                         // alignment: Alignment.center,
                         height: 140,
+                        width: 200,
                         color: Colors.amberAccent,
                         child: Padding(
                           padding: const EdgeInsets.all(15),

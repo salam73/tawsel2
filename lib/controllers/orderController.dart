@@ -14,6 +14,7 @@ class OrderController extends GetxController {
   var orderStatus = 'جاهز'.obs;
   var orderBySortingName = 'dateCreated'.obs;
   var sumAmount = 0.obs;
+  var clientId = ''.obs;
 
   List<OrderModel> get orders => orderList.value;
   List<OrderModel> get allOrders => allOrderList.value;
@@ -24,11 +25,11 @@ class OrderController extends GetxController {
     //var fireUser = Get.find<AuthController>().user;
     clear();
 
-    /* Get.find<UserController>().user =
+    Get.find<UserController>().user =
         await FireDb().getUser(uid: Get.find<AuthController>().user.uid);
     var user = Get.find<UserController>().user;
 
-    orderList.bindStream(FireDb().orderStream(user.id));*/
+    orderList.bindStream(FireDb().orderStream(user.id));
 
     allOrderList.bindStream(FireDb().allOrderStreamByStatus(
         status: orderStatus.value,
@@ -46,9 +47,11 @@ class OrderController extends GetxController {
   //   return 'printController' + sumAmount.toString();
   // }
 
-  void streamStatus({String status, String orderByName}) {
+  void streamStatus({String status, String orderByName, String clientId}) {
     allOrderList.bindStream(FireDb().allOrderStreamByStatus(
-        status: orderStatus.value, sortingName: orderBySortingName.value));
+        status: orderStatus.value,
+        sortingName: orderBySortingName.value,
+        clientId: clientId));
   }
 
   void clear() {

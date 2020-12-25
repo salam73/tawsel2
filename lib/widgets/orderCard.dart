@@ -54,12 +54,13 @@ class OrderCard extends StatelessWidget {
           FireDb().deleteOrder(order, uid);
         }
       },
+      // child: Text('here is the card')
       child: Card(
         margin: EdgeInsets.fromLTRB(10, 2.5, 10, 2.5),
         child: Container(
           margin: EdgeInsets.all(5),
           child: ListTile(
-            leading: Checkbox(
+            /*leading: Checkbox(
               value: order.done,
               onChanged: (newValue) {
                 order.done = newValue;
@@ -68,7 +69,7 @@ class OrderCard extends StatelessWidget {
                   uid,
                 );
               },
-            ),
+            ),*/
             title: InkWell(
               onTap: () {
                 //OrderAlert().editOrderDialog(order);
@@ -79,9 +80,10 @@ class OrderCard extends StatelessWidget {
                   Text(
                     order.orderNumber,
                     style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: (order.done) ? Colors.green : Colors.red),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      // color: (order.) ? Colors.green : Colors.red
+                    ),
                   ),
                 ],
               ),
