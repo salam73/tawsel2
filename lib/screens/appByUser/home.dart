@@ -79,7 +79,7 @@ class Home extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
-            "Orders",
+            "الطلبات",
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,

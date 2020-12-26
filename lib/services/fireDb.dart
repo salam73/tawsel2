@@ -124,11 +124,12 @@ class FireDb {
   }
 
   Stream<List<OrderModel>> orderStream(String uid) {
-    print('user id' + uid);
+    // print('user id' + uid);
     return _firestore
         .collection("users")
         .doc(uid)
         .collection("orders")
+        // .where('byUserId', isEqualTo: uid ?? '')
         // .orderBy("dateCreated", descending: true)
         .snapshots()
         .map((QuerySnapshot query) {
@@ -143,9 +144,11 @@ class FireDb {
   Stream<List<OrderModel>> allOrderStreamByStatus(
       {String status, String sortingName, String clientId}) {
     return _firestore
+        .collection("users")
+        .doc(clientId)
         .collection("orders")
         .where('status', isEqualTo: status ?? '')
-        .where('byUserId', isEqualTo: clientId ?? '')
+        // .where('byUserId', isEqualTo: clientId ?? '')
         .orderBy(sortingName ?? 'dateCreated', descending: true)
         .snapshots()
         .map((QuerySnapshot query) {
@@ -191,9 +194,15 @@ class FireDb {
     }
   }
 
-  Future<void> updateOrder2(OrderModel order, String uid) async {
+  Future<void> updateOrder2(
+      {OrderModel order, String clientId, String uid}) async {
     try {
-      _firestore.collection("orders").doc(uid).update(order.toJson());
+      _firestore
+          .collection("users")
+          .doc(clientId)
+          .collection("orders")
+          .doc(uid)
+          .update(order.toJson());
     } catch (e) {
       print(e);
       rethrow;

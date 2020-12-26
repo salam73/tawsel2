@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_web2/controllers/authController.dart';
 import 'package:get/get.dart';
 import 'package:flutter_web2/controllers/orderController.dart';
 import 'package:flutter_web2/models/order.dart';
@@ -260,9 +261,14 @@ class TableByUserId extends StatelessWidget {
 
                                           // statusTitleController.text
 
+                                          print('clinetid ' +
+                                              orderController.clientId.value);
+
                                           FireDb().updateOrder2(
-                                              orderModel,
-                                              orderController
+                                              order: orderModel,
+                                              clientId: orderController
+                                                  .clientId.value,
+                                              uid: orderController
                                                   .allOrders[index].orderId);
 
                                           orderController.streamStatus(
@@ -272,6 +278,11 @@ class TableByUserId extends StatelessWidget {
                                                   .orderBySortingName.value,
                                               clientId: orderController
                                                   .clientId.value);
+                                          getAllAmount(
+                                              status: orderController
+                                                  .orderStatus.value,
+                                              sortingByName: orderController
+                                                  .orderBySortingName.value);
 
                                           print(_listOption[_valueOBX.value]);
                                           Get.back();

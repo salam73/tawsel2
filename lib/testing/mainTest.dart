@@ -283,8 +283,8 @@ class MainTest extends StatelessWidget {
                                               _listOption[_value.value];
 
                                           FireDb().updateOrder2(
-                                              orderModel,
-                                              orderController
+                                              order: orderModel,
+                                              uid: orderController
                                                   .allOrders[index].orderId);
                                           print(_listOption[_value.value]);
                                           Get.back();
