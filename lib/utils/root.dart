@@ -2,6 +2,7 @@ import 'package:flutter_web2/controllers/authController.dart';
 import 'package:flutter_web2/controllers/userController.dart';
 import 'package:flutter_web2/layout/mainLayout.dart';
 import 'package:flutter_web2/models/user.dart';
+import 'package:flutter_web2/receivingBoy/receiveHome.dart';
 import 'package:flutter_web2/screens/OrdersListByUser.dart';
 import 'package:flutter_web2/screens/adminScreen/adminHome.dart';
 import 'package:flutter_web2/screens/appByUser/home.dart';
@@ -32,11 +33,11 @@ class Root extends GetWidget<AuthController> {
           //    print(user['isAdmin'].toString());
           // return Home();
           // return Test2();
-          // return MainLayout();
+          return MainLayout();
           // return MainTest();
           // return HomeAdmin();
           // return AdminHome();
-          //
+          return ReceiveHome();
           return MainLayout();
           // return OrdersList();
           // return UserList();
@@ -46,6 +47,7 @@ class Root extends GetWidget<AuthController> {
         } else {
           // return Test2();
           // return MainTest();
+          // return ReceiveHome();
           return MainLayout();
           // return MainTest();
           // return AdminHome();

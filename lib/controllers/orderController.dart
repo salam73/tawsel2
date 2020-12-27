@@ -13,7 +13,11 @@ class OrderController extends GetxController {
   var orderStatus = 'جاهز'.obs;
   var orderBySortingName = 'dateCreated'.obs;
   var sumAmount = 0.obs;
+  var sumDelivery = 0.obs;
   var clientId = ''.obs;
+
+  var sumOfAmountOBX = 0.obs;
+  var sumOfDeliveryCostOBX = 0.obs;
 
   List<OrderModel> get orders => orderList.value;
   List<OrderModel> get allOrders => allOrderList.value;
@@ -39,6 +43,22 @@ class OrderController extends GetxController {
 
   void orderByUser({String userId}) {
     orderList.bindStream(FireDb().orderStreamByUserId(userId));
+  }
+
+  int getAllAmount() {
+    int allAmount = 0;
+    allOrders.forEach((element) {
+      allAmount = allAmount + element.amountAfterDelivery;
+    });
+    return allAmount;
+  }
+
+  int getDeliveryCost() {
+    int deliveryCost = 0;
+    allOrders.forEach((element) {
+      deliveryCost = deliveryCost + element.deliveryCost;
+    });
+    return deliveryCost;
   }
 
   // String printOrder() {

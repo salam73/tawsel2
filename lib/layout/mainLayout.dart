@@ -7,22 +7,22 @@ import 'package:get/get.dart';
 import 'package:flutter_web2/layout/usersLayout.dart';
 
 class MainLayout extends StatelessWidget {
-  final AuthController _authController = Get.find();
+  //final AuthController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('company'),
+        title: Text('إسم الشركة'),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              _authController.logOut();
-              // Get.to(Login());
-            },
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.exit_to_app),
+          //   onPressed: () {
+          //     _authController.logOut();
+          //     // Get.to(Login());
+          //   },
+          // ),
         ],
       ),
       body: Center(

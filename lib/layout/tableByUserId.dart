@@ -17,23 +17,21 @@ import 'package:flutter_web2/services/fireDb.dart';
 
 // ignore: must_be_immutable
 class TableByUserId extends StatelessWidget {
-  var sumOfAmountOBX = 0.obs;
-  var sumOfDeliveryCostOBX = 0.obs;
   var orderStatusOBX = ''.obs;
   var headerStatusOBX = ''.obs;
   var orderTitleStatusOBX = ''.obs;
   var _valueOBX = 0.obs;
 
-  String orderCondition = '';
   var fireDb = FireDb();
 
-  var _listOption = ['واصل', 'راجع', 'مؤجل', 'قيد الإرسال'];
+  var _listOption = ['تم التسليم', 'واصل', 'راجع', 'مؤجل', 'قيد التوصيل'];
 
   OrderModel orderModel = OrderModel();
   OrderController orderController = Get.put(OrderController());
   var statusTitleController = TextEditingController();
+  var deliveryCostController = TextEditingController();
 
-  void getAllAmount({String status, String sortingByName}) {
+  /* void getAllAmount({String status, String sortingByName}) {
     headerStatusOBX.value = status;
     sumOfAmountOBX.value = 0;
     sumOfDeliveryCostOBX.value = 0;
@@ -52,18 +50,21 @@ class TableByUserId extends StatelessWidget {
         // print('foreach' + start.toString());
       });
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     // orderController.clientId.value = clientId;
-    orderController.streamStatus(
+    /*orderController.streamStatus(
         status: orderController.orderStatus.value,
         orderByName: orderController.orderBySortingName.value,
-        clientId: orderController.clientId.value);
-    getAllAmount(
+        clientId: orderController.clientId.value);*/
+
+    /* getAllAmount(
         status: orderController.orderStatus.value,
-        sortingByName: orderController.orderBySortingName.value);
+        sortingByName: orderController.orderBySortingName.value);*/
+
+    //orderController.orderAllAmount();
     //_onPressed();
     // orderController.orderStatus.value = 'non';
     return Directionality(
@@ -78,7 +79,7 @@ class TableByUserId extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    headerStatusOBX.toString(),
+                    orderController.orderStatus.toString(),
                     style: TextStyle(fontSize: 25),
                   ),
                   SizedBox(
@@ -107,6 +108,11 @@ class TableByUserId extends StatelessWidget {
                     status: 'جاهز',
                   ),
                   statusButton(
+                    title: 'تم التسليم',
+                    controller: orderController,
+                    status: 'تم التسليم',
+                  ),
+                  statusButton(
                       title: 'واصل',
                       controller: orderController,
                       status: 'واصل'),
@@ -119,9 +125,9 @@ class TableByUserId extends StatelessWidget {
                       controller: orderController,
                       status: 'مؤجل'),
                   statusButton(
-                      title: 'قيد الإرسال',
+                      title: 'قيد التوصيل',
                       controller: orderController,
-                      status: 'قيد الإرسال'),
+                      status: 'قيد التوصيل'),
                   SizedBox(
                     height: 20,
                   )
@@ -180,7 +186,7 @@ class TableByUserId extends StatelessWidget {
               height: 10,
             ),
             GetX<OrderController>(
-              // init: Get.put(OrderController()),
+              init: Get.put(OrderController()),
               builder: (OrderController orderController) {
                 // orderController.sumAmount.value = 0;
                 if (orderController != null &&
@@ -189,10 +195,10 @@ class TableByUserId extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: orderController.allOrders.length,
                       itemBuilder: (_, index) {
-                        orderController.sumAmount.value =
-                            orderController.sumAmount.value +
-                                orderController
-                                    .allOrders[index].amountAfterDelivery;
+                        // orderController.sumAmount.value =
+                        //     orderController.sumAmount.value +
+                        //         orderController
+                        //             .allOrders[index].amountAfterDelivery;
 
                         return Column(
                           children: [
@@ -231,9 +237,55 @@ class TableByUserId extends StatelessWidget {
                                         .allOrders[index].amountAfterDelivery
                                         .toString())),
                                 Expanded(
-                                    child: Text(orderController
-                                        .allOrders[index].deliveryCost
-                                        .toString())),
+                                    child: InkWell(
+                                  onTap: () {
+                                    Get.defaultDialog(
+                                        textCancel: 'إلغاء',
+                                        onCancel: null,
+                                        textConfirm: 'ok',
+                                        confirmTextColor: Colors.white,
+                                        onConfirm: () {
+                                          orderModel =
+                                              orderController.allOrders[index];
+
+                                          orderModel.deliveryCost = int.parse(
+                                              deliveryCostController.text);
+
+                                          // statusTitleController.text
+
+                                          FireDb().updateOrder2(
+                                              order: orderModel,
+                                              clientId: orderController
+                                                  .clientId.value,
+                                              uid: orderController
+                                                  .allOrders[index].orderId);
+
+                                          orderController.streamStatus(
+                                              status: orderController
+                                                  .orderStatus.value,
+                                              orderByName: orderController
+                                                  .orderBySortingName.value,
+                                              clientId: orderController
+                                                  .clientId.value);
+                                          /*  getAllAmount(
+                                              status: orderController
+                                                  .orderStatus.value,
+                                              sortingByName: orderController
+                                                  .orderBySortingName.value);*/
+
+                                          // print(_listOption[_valueOBX.value]);
+                                          Get.back();
+                                        },
+                                        title:
+                                            'تغير سعر النقل ${orderController.allOrders[index].orderNumber} إلى ',
+                                        content: TextField(
+                                          controller: deliveryCostController,
+                                        ));
+                                  },
+                                  child: Text(orderController
+                                      .allOrders[index].deliveryCost
+                                      .toString()),
+                                )),
                                 Expanded(
                                   child: Text(
                                     DateFormat('yyyy-MM-dd').format(
@@ -293,11 +345,11 @@ class TableByUserId extends StatelessWidget {
                                                   .orderBySortingName.value,
                                               clientId: orderController
                                                   .clientId.value);
-                                          getAllAmount(
+                                          /*  getAllAmount(
                                               status: orderController
                                                   .orderStatus.value,
                                               sortingByName: orderController
-                                                  .orderBySortingName.value);
+                                                  .orderBySortingName.value);*/
 
                                           print(_listOption[_valueOBX.value]);
                                           Get.back();
@@ -360,8 +412,11 @@ class TableByUserId extends StatelessWidget {
                                         middleText: orderController
                                             .allOrders[index].orderId);
                                   },
-                                  child: Text(orderController
-                                      .allOrders[index].statusTitle),
+                                  child: Container(
+                                    child: Text(orderController
+                                        .allOrders[index].statusTitle),
+                                    color: Colors.lightBlueAccent,
+                                  ),
                                 ))
                               ],
                             ),
@@ -392,16 +447,17 @@ class TableByUserId extends StatelessWidget {
                   () => Container(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      sumOfAmountOBX.value.toString(),
+                      orderController.getAllAmount().toString(),
                     ),
                   ),
                 ),
                 Text('النقل: '),
-                Obx(() => Text(sumOfDeliveryCostOBX.value.toString())),
+                Obx(() => Text(orderController.getDeliveryCost().toString())),
                 Text('الباقي: '),
                 Obx(
                   () => Text(
-                    (sumOfAmountOBX.value - sumOfDeliveryCostOBX.value)
+                    (orderController.getAllAmount() -
+                            orderController.getDeliveryCost())
                         .toString(),
                   ),
                 ),
@@ -422,14 +478,17 @@ class TableByUserId extends StatelessWidget {
     String status,
   }) {
     return RaisedButton(
-      child: Text(title),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(title),
+      ),
       onPressed: () {
         controller.orderStatus.value = status;
         // orderStatus.value = status;
 
         controller.streamStatus(
             status: status, clientId: orderController.clientId.value);
-        getAllAmount(status: status);
+        /*  getAllAmount(status: status);*/
       },
     );
   }
@@ -443,13 +502,11 @@ class TableByUserId extends StatelessWidget {
       child: InkWell(
         onTap: () {
           controller.orderBySortingName.value = engTitle;
-          getAllAmount(
-              sortingByName: engTitle,
-              status: orderController.orderStatus.value);
+
           controller.streamStatus(
               orderByName: engTitle,
-              status: orderController.orderStatus.value,
-              clientId: orderController.clientId.value);
+              status: controller.orderStatus.value,
+              clientId: controller.clientId.value);
         },
         child: Text(arbTitle),
       ),

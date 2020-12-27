@@ -4,14 +4,16 @@ import 'package:flutter_web2/services/fireDb.dart';
 import 'package:get/get.dart';
 
 class UserController extends GetxController {
-  Rx<UserModel> _userModel = UserModel().obs; //Observable
+  Rx<UserModel> userModel = UserModel().obs; //Observable
+
+  var currentUser = ''.obs;
 
 //Getter
 
-  UserModel get user => _userModel.value;
+  UserModel get user => userModel.value;
 
 //Setter
-  set user(UserModel userVal) => this._userModel.value = userVal;
+  set user(UserModel userVal) => this.userModel.value = userVal;
 
   getUser() async {
     var fireUser = Get.find<AuthController>().user;
@@ -23,6 +25,6 @@ class UserController extends GetxController {
 
 //ClearModal
   void clear() {
-    _userModel.value = UserModel();
+    userModel.value = UserModel();
   }
 }

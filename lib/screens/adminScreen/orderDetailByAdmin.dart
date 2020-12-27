@@ -68,8 +68,8 @@ class OrderDetailByAdmin extends StatelessWidget {
               StreamBuilder(
                 // initialData: FireDb().getOrder(uid: _authController.user.uid, orderId:orderId ),
                 stream: FirebaseFirestore.instance
-                    // .collection('users')
-                    // .doc(_authController.user.uid)
+                    .collection('users')
+                    .doc(userId)
                     .collection('orders')
                     .doc(orderId)
                     .snapshots(),
@@ -77,8 +77,8 @@ class OrderDetailByAdmin extends StatelessWidget {
                   if (!snapshot.hasData) {
                     return CircularProgressIndicator();
                   }
-                  print('orderId :' + snapshot.data.id);
-                  print('orderId2 :' + orderId);
+                  // print('orderId :' + snapshot.data.id);
+                  // print('orderId2 :' + orderId);
                   return Column(
                     children: [
                       StreamBuilder(
@@ -98,7 +98,7 @@ class OrderDetailByAdmin extends StatelessWidget {
                       Column(
                         children: [
                           orderDetialText(
-                              'رقم الاورد', snapshot.data['orderNumber']),
+                              'رقم الطلب', snapshot.data['orderNumber']),
                           orderDetialText('إسم الزبون',
                               snapshot.data['customerName'] ?? ''),
                           orderDetialText('عنوان الزبون',

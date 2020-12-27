@@ -107,20 +107,20 @@ class OrderInput extends StatelessWidget {
   }*/
 
   List<String> country = [
+    'بغداد',
+    'أربيل',
+    'البصرة',
+    'الموصل',
+    'كربلاء',
+    'النجف',
     'الرمادي',
     'الحلة‎',
-    'بغداد',
-    'البصرة',
     'الناصرية',
     'بعقوبة‎',
     'دهوك',
-    'أربيل',
-    'كربلاء',
     'كركوك',
     'العمارة',
     'السماوة',
-    'النجف',
-    'الموصل',
     'الديوانية',
     'تكريت',
     'السليمانية',
@@ -141,15 +141,16 @@ class OrderInput extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        centerTitle: true,
         title: Text('أضف طلب'),
-        actions: [
+        /* actions: [
           IconButton(
             icon: Icon(Icons.exit_to_app),
             onPressed: () {
               _authController.logOut();
             },
           ),
-        ],
+        ],*/
       ),
       body: Directionality(
         textDirection: TextDirection.rtl,
@@ -177,14 +178,12 @@ class OrderInput extends StatelessWidget {
                   controller: cityName,
                   onValueChanged: (dynamic value) {
                     cityName.text = value;
-
-                    // print(value);
                   },
-                  icon: Icon(Icons.ac_unit),
+                  // icon: Icon(Icons.ac_unit),
                   value: cityName.text,
                   required: true,
-                  hintText: 'أختر مدينة',
-                  labelText: 'المدن',
+                  hintText: 'أختر المحافظة',
+                  labelText: 'المحافظة',
                   items: country,
                 ),
 
