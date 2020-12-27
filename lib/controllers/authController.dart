@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_web2/controllers/userController.dart';
+import 'package:flutter_web2/layout/mainLayout.dart';
 import 'package:flutter_web2/models/user.dart';
+import 'package:flutter_web2/screens/appByUser/home.dart';
 import 'package:flutter_web2/services/fireDb.dart';
 import 'package:get/get.dart';
 
@@ -61,10 +63,15 @@ class AuthController extends GetxController {
         email: email,
         password: password,
       );
-      Get.find<UserController>().user =
+      var user = Get.find<UserController>().user =
           await FireDb().getUser(uid: userCredential.user.uid);
 
       Get.back();
+      // if (user.role != null) {
+      //   if (user.role == 'admin') Get.off(MainLayout());
+      //   if (user.role == 'shopOwner') Get.off(Home());
+      // } else
+      //   print('wait');
     } catch (e) {
       getErrorSnack("Error While SignIn Account", e.message);
     }

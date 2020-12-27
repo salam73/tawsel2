@@ -4,6 +4,7 @@ import 'package:flutter_web2/controllers/orderController.dart';
 import 'package:flutter_web2/controllers/userController.dart';
 import 'package:flutter_web2/models/user.dart';
 import 'package:flutter_web2/screens/appByUser/orderInput.dart';
+import 'package:flutter_web2/screens/auth/login.dart';
 import 'package:flutter_web2/services/fireDb.dart';
 import 'package:flutter_web2/widgets/orderCard.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +14,8 @@ import 'package:flutter_web2/widgets/orderAlert.dart';
 
 class Home extends StatelessWidget {
   final AuthController _authController = Get.find();
-
+  final UserController userModel = Get.find();
+  //
   final ThemeController _themeController = Get.put(ThemeController());
 
   getLightIcon() {
@@ -41,6 +43,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print(userModel.user.role);
+
     return Scaffold(
       appBar: AppBar(
         title: getUserName(),
@@ -64,6 +68,7 @@ class Home extends StatelessWidget {
             icon: Icon(Icons.exit_to_app),
             onPressed: () {
               _authController.logOut();
+              // Get.to(Login());
             },
           ),
         ],
@@ -81,10 +86,17 @@ class Home extends StatelessWidget {
           Text(
             "الطلبات",
             style: TextStyle(
-              fontSize: 30,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
+          Obx(() => Text(
+                userModel.user.role ?? '',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
           GetX<OrderController>(
             init: Get.put<OrderController>(OrderController()),
             builder: (OrderController orderController) {

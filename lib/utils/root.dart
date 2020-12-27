@@ -30,7 +30,7 @@ class Root extends GetWidget<AuthController> {
           // var user = Get.find<AuthController>().user;
 
           //    print(user['isAdmin'].toString());
-          return Home();
+          // return Home();
           // return Test2();
           // return MainLayout();
           // return MainTest();
@@ -46,7 +46,7 @@ class Root extends GetWidget<AuthController> {
         } else {
           // return Test2();
           // return MainTest();
-          // return MainLayout();
+          return MainLayout();
           // return MainTest();
           // return AdminHome();
           // return HomeAdmin();

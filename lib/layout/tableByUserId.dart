@@ -18,6 +18,7 @@ import 'package:flutter_web2/services/fireDb.dart';
 // ignore: must_be_immutable
 class TableByUserId extends StatelessWidget {
   var sumOfAmountOBX = 0.obs;
+  var sumOfDeliveryCostOBX = 0.obs;
   var orderStatusOBX = ''.obs;
   var headerStatusOBX = ''.obs;
   var orderTitleStatusOBX = ''.obs;
@@ -35,15 +36,19 @@ class TableByUserId extends StatelessWidget {
   void getAllAmount({String status, String sortingByName}) {
     headerStatusOBX.value = status;
     sumOfAmountOBX.value = 0;
-    int start = 0;
+    sumOfDeliveryCostOBX.value = 0;
+    int amount = 0;
+    int cost = 0;
     var g = fireDb.allOrderStreamByStatus(
         status: status,
         sortingName: sortingByName,
         clientId: orderController.clientId.value);
     g.forEach((element) {
       element.forEach((element) {
-        start = start + element.amountAfterDelivery;
-        sumOfAmountOBX.value = start;
+        amount = amount + element.amountAfterDelivery;
+        cost = cost + element.deliveryCost;
+        sumOfAmountOBX.value = amount;
+        sumOfDeliveryCostOBX.value = cost;
         // print('foreach' + start.toString());
       });
     });
@@ -155,6 +160,10 @@ class TableByUserId extends StatelessWidget {
                     engTitle: 'amountAfterDelivery',
                     controller: orderController),
                 headerTitle(
+                    arbTitle: 'النقل',
+                    engTitle: 'deliveryCost',
+                    controller: orderController),
+                headerTitle(
                     arbTitle: 'التاريخ',
                     engTitle: 'dateCreated',
                     controller: orderController),
@@ -222,6 +231,10 @@ class TableByUserId extends StatelessWidget {
                                         .allOrders[index].amountAfterDelivery
                                         .toString())),
                                 Expanded(
+                                    child: Text(orderController
+                                        .allOrders[index].deliveryCost
+                                        .toString())),
+                                Expanded(
                                   child: Text(
                                     DateFormat('yyyy-MM-dd').format(
                                         orderController
@@ -229,6 +242,8 @@ class TableByUserId extends StatelessWidget {
                                             .toDate()),
                                   ),
                                 ),
+
+                                // هنا قسم الحالة وعن طريقة يمكن تغير الحاله
                                 Expanded(
                                     child: InkWell(
                                   onTap: () {
@@ -370,10 +385,26 @@ class TableByUserId extends StatelessWidget {
               },
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text('المجموع: '),
-                Obx(() => Text(sumOfAmountOBX.value.toString())),
+                Obx(
+                  () => Container(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      sumOfAmountOBX.value.toString(),
+                    ),
+                  ),
+                ),
+                Text('النقل: '),
+                Obx(() => Text(sumOfDeliveryCostOBX.value.toString())),
+                Text('الباقي: '),
+                Obx(
+                  () => Text(
+                    (sumOfAmountOBX.value - sumOfDeliveryCostOBX.value)
+                        .toString(),
+                  ),
+                ),
               ],
             ),
             SizedBox(

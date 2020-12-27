@@ -14,9 +14,9 @@ class UserController extends GetxController {
   set user(UserModel userVal) => this._userModel.value = userVal;
 
   getUser() async {
-    var fireuser = Get.find<AuthController>().user;
-    if (fireuser != null) {
-      this.user = await FireDb().getUser(uid: fireuser.uid);
+    var fireUser = Get.find<AuthController>().user;
+    if (fireUser != null) {
+      this.user = await FireDb().getUser(uid: fireUser.uid);
       //this._userModel.value = await FireDb().getUser(fireuser.uid);
     }
   }

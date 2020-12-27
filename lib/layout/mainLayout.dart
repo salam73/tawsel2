@@ -1,20 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web2/controllers/authController.dart';
+import 'package:flutter_web2/controllers/userController.dart';
+import 'package:flutter_web2/screens/auth/login.dart';
 import 'package:get/get.dart';
 import 'package:flutter_web2/layout/usersLayout.dart';
-import 'package:flutter_web2/screens/adminScreen/sortOrderByCity.dart';
-import 'package:flutter_web2/screens/adminScreen/sortOrdersByDate.dart';
-import 'package:flutter_web2/screens/ordersList.dart';
-import 'package:flutter_web2/screens/userList.dart';
-import 'package:flutter_web2/testing/mainTest.dart';
 
 class MainLayout extends StatelessWidget {
+  final AuthController _authController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('company'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              _authController.logOut();
+              // Get.to(Login());
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Container(

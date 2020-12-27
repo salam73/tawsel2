@@ -33,43 +33,47 @@ class OrderDetail extends StatelessWidget {
               children: [
                 Text(
                   'رقم الطلب : ' + order.orderNumber,
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 20),
                 ),
                 Text(
                   'حالة الطلب : ' + order.status,
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 20),
                 ),
                 Text(
                   'السبب : ' + order.statusTitle,
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 20),
                 ),
                 Text(
                   'إسم الزبون : ' + order.customerName,
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 20),
                 ),
                 Text(
                   'عنوان المبون :' + order.customerAddress,
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 20),
                 ),
                 Text(
                   'هاتف الزبون : ' + order.customerPhone,
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 20),
                 ),
                 Text(
                   'المحافظة : ' + order.deliveryToCity,
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 20),
                 ),
                 Text(
                   'المبلغ مع التوصيل : ' + order.amountAfterDelivery.toString(),
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 20),
+                ),
+                Text(
+                  'تكلفة التوصيل : ' + order.deliveryCost.toString(),
+                  style: TextStyle(fontSize: 20),
                 ),
                 Text(
                   'المحتوى : ' + order.orderType,
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 20),
                 ),
                 Text(
                   'ملاحظة : ' + order.commit,
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 20),
                 ),
               ],
             ),

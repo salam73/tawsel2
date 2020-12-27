@@ -10,6 +10,7 @@ class OrderModel {
   String byUserId;
 
   String deliveryToCity;
+  int deliveryCost;
 
   String customerName;
   String customerAddress;
@@ -35,6 +36,7 @@ class OrderModel {
     // this.done,
     this.orderNumber,
     this.deliveryToCity,
+    this.deliveryCost,
     this.customerName,
     this.customerAddress,
     this.customerPhone,
@@ -59,6 +61,7 @@ class OrderModel {
     orderNumber = documentSnapshot["orderNumber"];
     //
     deliveryToCity = documentSnapshot["deliveryToCity"];
+    deliveryCost = documentSnapshot["deliveryCost"];
     customerName = documentSnapshot["customerName"];
     customerAddress = documentSnapshot["customerAddress"];
     customerPhone = documentSnapshot["customerPhone"];
@@ -82,6 +85,7 @@ class OrderModel {
     data['orderNumber'] = this.orderNumber;
 
     data['deliveryToCity'] = this.deliveryToCity;
+    data['deliveryCost'] = this.deliveryCost;
     data['customerName'] = this.customerName;
     data['customerAddress'] = this.customerAddress;
     data['customerPhone'] = this.customerPhone;
