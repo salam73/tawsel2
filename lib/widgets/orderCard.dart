@@ -40,9 +40,14 @@ class OrderCard extends StatelessWidget {
           mycolor = Color(0xfffce653);
         }
         break;
-      case 'قيد الإرسال':
+      case 'قيد التوصيل':
         {
           mycolor = Color(0xff8bc7e0);
+        }
+        break;
+      case 'تم التسليم':
+        {
+          mycolor = Color(0xff99caa0);
         }
         break;
 

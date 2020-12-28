@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_web2/controllers/authController.dart';
+import 'package:flutter_web2/controllers/userController.dart';
 import 'package:get/get.dart';
 import 'package:flutter_web2/controllers/orderController.dart';
 import 'package:flutter_web2/models/order.dart';
@@ -31,46 +32,14 @@ class TableByUserId extends StatelessWidget {
   var statusTitleController = TextEditingController();
   var deliveryCostController = TextEditingController();
 
-  /* void getAllAmount({String status, String sortingByName}) {
-    headerStatusOBX.value = status;
-    sumOfAmountOBX.value = 0;
-    sumOfDeliveryCostOBX.value = 0;
-    int amount = 0;
-    int cost = 0;
-    var g = fireDb.allOrderStreamByStatus(
-        status: status,
-        sortingName: sortingByName,
-        clientId: orderController.clientId.value);
-    g.forEach((element) {
-      element.forEach((element) {
-        amount = amount + element.amountAfterDelivery;
-        cost = cost + element.deliveryCost;
-        sumOfAmountOBX.value = amount;
-        sumOfDeliveryCostOBX.value = cost;
-        // print('foreach' + start.toString());
-      });
-    });
-  }*/
-
   @override
   Widget build(BuildContext context) {
-    // orderController.clientId.value = clientId;
-    /*orderController.streamStatus(
-        status: orderController.orderStatus.value,
-        orderByName: orderController.orderBySortingName.value,
-        clientId: orderController.clientId.value);*/
-
-    /* getAllAmount(
-        status: orderController.orderStatus.value,
-        sortingByName: orderController.orderBySortingName.value);*/
-
-    //orderController.orderAllAmount();
-    //_onPressed();
-    // orderController.orderStatus.value = 'non';
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text(Get.find<UserController>().currentUser.value),
+        ),
         body: Center(
             child: Column(
           children: [
@@ -260,13 +229,13 @@ class TableByUserId extends StatelessWidget {
                                               uid: orderController
                                                   .allOrders[index].orderId);
 
-                                          orderController.streamStatus(
+                                          /*orderController.streamStatus(
                                               status: orderController
                                                   .orderStatus.value,
                                               orderByName: orderController
                                                   .orderBySortingName.value,
                                               clientId: orderController
-                                                  .clientId.value);
+                                                  .clientId.value);*/
                                           /*  getAllAmount(
                                               status: orderController
                                                   .orderStatus.value,
@@ -338,13 +307,13 @@ class TableByUserId extends StatelessWidget {
                                               uid: orderController
                                                   .allOrders[index].orderId);
 
-                                          orderController.streamStatus(
+                                          /* orderController.streamStatus(
                                               status: orderController
                                                   .orderStatus.value,
                                               orderByName: orderController
                                                   .orderBySortingName.value,
                                               clientId: orderController
-                                                  .clientId.value);
+                                                  .clientId.value);*/
                                           /*  getAllAmount(
                                               status: orderController
                                                   .orderStatus.value,
@@ -355,7 +324,7 @@ class TableByUserId extends StatelessWidget {
                                           Get.back();
                                         },
                                         title:
-                                            'تغير حالة الطلب إلى :${orderController.allOrders[index].orderNumber}',
+                                            'تغير حالة الطلب ${orderController.allOrders[index].orderNumber} إلى :',
                                         content: Column(
                                           children: <Widget>[
                                             for (int i = 0;
@@ -390,23 +359,28 @@ class TableByUserId extends StatelessWidget {
                                                       },
                                                     )),
                                               ),
-                                            Obx(() => orderStatusOBX.value !=
-                                                    'واصل'
-                                                ? TextField(
-                                                    controller:
-                                                        statusTitleController,
-                                                    decoration: InputDecoration(
-                                                      labelText:
-                                                          orderTitleStatusOBX
-                                                              .value,
-                                                      labelStyle: TextStyle(
-                                                          fontSize: 14),
-                                                      hintStyle: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 10),
+                                            Obx(
+                                              () => orderStatusOBX.value ==
+                                                          'واصل' ||
+                                                      orderStatusOBX.value ==
+                                                          'تم التسليم'
+                                                  ? Container()
+                                                  : TextField(
+                                                      controller:
+                                                          statusTitleController,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        labelText:
+                                                            orderTitleStatusOBX
+                                                                .value,
+                                                        labelStyle: TextStyle(
+                                                            fontSize: 14),
+                                                        hintStyle: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 10),
+                                                      ),
                                                     ),
-                                                  )
-                                                : Container())
+                                            )
                                           ],
                                         ),
                                         middleText: orderController
