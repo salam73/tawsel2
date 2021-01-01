@@ -17,6 +17,7 @@ import 'package:flutter_web2/screens/userList.dart';
 import 'package:flutter_web2/testing/mainTest.dart';
 import 'package:flutter_web2/testing/test2.dart';
 
+// ignore: must_be_immutable
 class Root extends GetWidget<AuthController> {
   //Just For Switching to Home to Login
   UserModel userModel = UserModel();

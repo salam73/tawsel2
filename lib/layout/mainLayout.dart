@@ -40,7 +40,7 @@ class MainLayout extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.3,
                   color: Colors.deepOrangeAccent,
                   child: Text(
-                    'عملاء',
+                    'العميل',
                     style: TextStyle(
                         fontSize: (MediaQuery.of(context).size.width * 0.3) / 4,
                         color: Colors.white),

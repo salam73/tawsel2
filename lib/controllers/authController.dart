@@ -5,6 +5,7 @@ import 'package:flutter_web2/models/user.dart';
 import 'package:flutter_web2/screens/appByUser/home.dart';
 import 'package:flutter_web2/services/fireDb.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class AuthController extends GetxController {
   FirebaseAuth _auth = FirebaseAuth.instance; //Private Variable

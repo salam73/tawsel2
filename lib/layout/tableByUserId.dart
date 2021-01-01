@@ -32,8 +32,17 @@ class TableByUserId extends StatelessWidget {
   var statusTitleController = TextEditingController();
   var deliveryCostController = TextEditingController();
 
+  void updateLayout() {
+    orderController.streamStatus(
+        status: orderController.orderStatus.value,
+        clientId: orderController.clientId.value);
+  }
+
   @override
   Widget build(BuildContext context) {
+    updateLayout();
+
+    print('orderController orderStatus:' + orderController.orderStatus.value);
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
@@ -41,6 +50,7 @@ class TableByUserId extends StatelessWidget {
           title: Text(Get.find<UserController>().currentUser.value),
         ),
         body: Center(
+            /**/
             child: Column(
           children: [
             Obx(
@@ -290,8 +300,10 @@ class TableByUserId extends StatelessWidget {
                                         onConfirm: () {
                                           orderModel =
                                               orderController.allOrders[index];
+
                                           orderModel.status =
                                               _listOption[_valueOBX.value];
+
                                           orderModel.statusTitle =
                                               statusTitleController.text;
 
@@ -307,6 +319,8 @@ class TableByUserId extends StatelessWidget {
                                               uid: orderController
                                                   .allOrders[index].orderId);
 
+                                          updateLayout();
+
                                           /* orderController.streamStatus(
                                               status: orderController
                                                   .orderStatus.value,
@@ -319,6 +333,10 @@ class TableByUserId extends StatelessWidget {
                                                   .orderStatus.value,
                                               sortingByName: orderController
                                                   .orderBySortingName.value);*/
+
+                                          print('orderController orderStatus:' +
+                                              orderController
+                                                  .orderStatus.value);
 
                                           print(_listOption[_valueOBX.value]);
                                           Get.back();
@@ -360,26 +378,19 @@ class TableByUserId extends StatelessWidget {
                                                     )),
                                               ),
                                             Obx(
-                                              () => orderStatusOBX.value ==
-                                                          'واصل' ||
-                                                      orderStatusOBX.value ==
-                                                          'تم التسليم'
-                                                  ? Container()
-                                                  : TextField(
-                                                      controller:
-                                                          statusTitleController,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        labelText:
-                                                            orderTitleStatusOBX
-                                                                .value,
-                                                        labelStyle: TextStyle(
-                                                            fontSize: 14),
-                                                        hintStyle: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 10),
-                                                      ),
-                                                    ),
+                                              () => TextField(
+                                                controller:
+                                                    statusTitleController,
+                                                decoration: InputDecoration(
+                                                  labelText:
+                                                      orderTitleStatusOBX.value,
+                                                  labelStyle:
+                                                      TextStyle(fontSize: 14),
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 10),
+                                                ),
+                                              ),
                                             )
                                           ],
                                         ),
@@ -462,6 +473,8 @@ class TableByUserId extends StatelessWidget {
 
         controller.streamStatus(
             status: status, clientId: orderController.clientId.value);
+
+        print('orderController orderStatus:' + controller.orderStatus.value);
         /*  getAllAmount(status: status);*/
       },
     );
@@ -481,6 +494,8 @@ class TableByUserId extends StatelessWidget {
               orderByName: engTitle,
               status: controller.orderStatus.value,
               clientId: controller.clientId.value);
+
+          print('orderController orderStatus:' + controller.orderStatus.value);
         },
         child: Text(arbTitle),
       ),
