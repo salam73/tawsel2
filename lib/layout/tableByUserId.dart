@@ -11,6 +11,7 @@ import 'package:flutter_web2/controllers/orderController.dart';
 import 'package:flutter_web2/models/order.dart';
 import 'package:flutter_web2/screens/adminScreen/orderDetailByAdmin.dart';
 import 'package:flutter_web2/screens/appByUser/home.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 
@@ -47,7 +48,8 @@ class TableByUserId extends StatelessWidget {
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(Get.find<UserController>().currentUser.value),
+          title: Text(Get.find<UserController>().currentUser.value,
+              style: GoogleFonts.cairo()),
         ),
         body: Center(
             /**/

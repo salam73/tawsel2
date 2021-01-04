@@ -5,6 +5,7 @@ import 'package:flutter_web2/controllers/userController.dart';
 import 'package:flutter_web2/screens/auth/login.dart';
 import 'package:get/get.dart';
 import 'package:flutter_web2/layout/usersLayout.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MainLayout extends StatelessWidget {
   //final AuthController _authController = Get.find();
@@ -13,7 +14,7 @@ class MainLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('إسم الشركة'),
+        title: Text('إسم الشركة', style: GoogleFonts.cairo()),
         centerTitle: true,
         actions: [
           // IconButton(

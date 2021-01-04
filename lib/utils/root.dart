@@ -52,7 +52,7 @@ class Root extends GetWidget<AuthController> {
           // return Test2();
           // return MainTest();
           // return ReceiveHome();
-          // return MainLayout();
+          return MainLayout();
           // return MainTest();
           // return AdminHome();
           // return HomeAdmin();
