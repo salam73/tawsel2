@@ -92,7 +92,7 @@ class UsersLayout extends StatelessWidget {
                         print(e.id.toString());
 
                         orderController.clientId.value = e.id;
-                        orderController.orderStatus.value = 'جاهز';
+                        // orderController.orderStatus.value = 'جاهز';
                         Get.find<UserController>().currentUser.value =
                             e['name'];
 

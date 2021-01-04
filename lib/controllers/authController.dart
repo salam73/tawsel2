@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_web2/controllers/deliveryBoyController.dart';
 import 'package:flutter_web2/controllers/userController.dart';
 import 'package:flutter_web2/layout/mainLayout.dart';
+import 'package:flutter_web2/models/deliveryBoy.dart';
 import 'package:flutter_web2/models/user.dart';
 import 'package:flutter_web2/screens/appByUser/home.dart';
 import 'package:flutter_web2/services/fireDb.dart';
@@ -57,6 +59,38 @@ class AuthController extends GetxController {
     }
   }
 
+  void createDeliveryBoy(
+      {String name,
+      String email,
+      String password,
+      String shopName,
+      String shopAddress,
+      String phoneNumber}) async {
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      var _user = DeliveryBoyModel(
+          id: userCredential.user.uid,
+          email: userCredential.user.email,
+          password: password,
+          name: name,
+          province: shopName,
+          deliveryBoyAddress: shopAddress,
+          phoneNumber: phoneNumber);
+      var rs = await FireDb().createNewDeliveryBoy(_user);
+      if (rs) {
+        Get.find<DeliveryBoyController>().deliveryBoy = _user;
+        Get.back();
+      }
+    } catch (e) {
+      getErrorSnack("Error While Creating Account", e.message);
+    }
+  }
+
 //Login
   void login(String email, String password) async {
     try {
@@ -78,12 +112,33 @@ class AuthController extends GetxController {
     }
   }
 
+  void loginDeliveryBoy(String email, String password) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      var user = Get.find<DeliveryBoyController>().deliveryBoy =
+          await FireDb().getDeliveryBoy(uid: userCredential.user.uid);
+
+      Get.back();
+      // if (user.role != null) {
+      //   if (user.role == 'admin') Get.off(MainLayout());
+      //   if (user.role == 'shopOwner') Get.off(Home());
+      // } else
+      //   print('wait');
+    } catch (e) {
+      getErrorSnack("Error While SignIn Account", e.message);
+    }
+  }
+
 //Logout
   void logOut() async {
     await _auth.signOut();
     Get.reset();
     Get.lazyPut(() => AuthController());
     Get.lazyPut(() => UserController());
+    Get.lazyPut(() => DeliveryBoyController());
   }
 
   //ErrorSnakBar

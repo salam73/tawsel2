@@ -9,6 +9,8 @@ import 'package:flutter_web2/screens/appByUser/home.dart';
 import 'package:flutter_web2/screens/auth/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web2/screens/fbpage/fbpageHome.dart';
+import 'package:flutter_web2/screens/fbpage/fbpageStatus.dart';
 import 'package:get/get.dart';
 import 'package:flutter_web2/screens/appByUser/orderInput.dart';
 import 'package:flutter_web2/screens/homeAdmin.dart';
@@ -38,7 +40,8 @@ class Root extends GetWidget<AuthController> {
           // return MainTest();
           // return HomeAdmin();
           // return AdminHome();
-          // return ReceiveHome();
+          //  return ReceiveHome();
+          // return FbPageStatus();
           return MainLayout();
           // return OrdersList();
           // return UserList();
@@ -49,7 +52,7 @@ class Root extends GetWidget<AuthController> {
           // return Test2();
           // return MainTest();
           // return ReceiveHome();
-          return MainLayout();
+          // return MainLayout();
           // return MainTest();
           // return AdminHome();
           // return HomeAdmin();

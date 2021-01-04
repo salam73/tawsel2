@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site":"mandob",
+    "site":"tawselat",
     "public": "build/web",
     "ignore": [
       "firebase.json",

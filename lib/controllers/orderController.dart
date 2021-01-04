@@ -10,7 +10,7 @@ class OrderController extends GetxController {
   Rx<List<OrderModel>> orderList = Rx<List<OrderModel>>();
   Rx<List<OrderModel>> allOrderList = Rx<List<OrderModel>>();
 
-  var orderStatus = 'جاهز'.obs;
+  var orderStatus = ''.obs;
   var orderBySortingName = 'dateCreated'.obs;
   var sumAmount = 0.obs;
   var sumDelivery = 0.obs;
@@ -67,7 +67,7 @@ class OrderController extends GetxController {
 
   void streamStatus({String status, String orderByName, String clientId}) {
     allOrderList.bindStream(FireDb().allOrderStreamByStatus(
-        status: orderStatus.value,
+        status: status,
         sortingName: orderBySortingName.value,
         clientId: clientId));
   }

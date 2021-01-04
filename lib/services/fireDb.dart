@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_web2/models/deliveryBoy.dart';
 import 'package:flutter_web2/models/order.dart';
 import 'package:flutter_web2/models/user.dart';
+import 'package:random_string/random_string.dart';
+import 'dart:math' show Random;
 
 class FireDb {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -25,12 +28,44 @@ class FireDb {
     }
   }
 
+  Future<bool> createNewDeliveryBoy(DeliveryBoyModel user) async {
+    try {
+      await _firestore.collection("deliveryBoy").doc(user.id).set({
+        "name": user.name,
+        "email": user.email,
+        "password": user.password,
+        "province": user.province,
+        "deliveryBoyAddress": user.deliveryBoyAddress,
+        'phoneNumber': user.phoneNumber,
+        // 'isShopOwner': false,
+        // 'isDeliveryBoy': false,
+        // 'isDeliveryProvince': false,
+        // 'isAdmin': false,
+        'role': user.role ?? ''
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<UserModel> getUser({String uid}) async {
     try {
       DocumentSnapshot _doc =
           await _firestore.collection("users").doc(uid).get();
 
       return UserModel.fromSnapShot(_doc);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<DeliveryBoyModel> getDeliveryBoy({String uid}) async {
+    try {
+      DocumentSnapshot _doc =
+          await _firestore.collection("deliveryboy").doc(uid).get();
+
+      return DeliveryBoyModel.fromSnapShot(_doc);
     } catch (e) {
       rethrow;
     }
@@ -54,33 +89,19 @@ class FireDb {
     String status,
     String statusTitle,
   }) async {
-    try {
-      await _firestore.collection("users").doc(uid).collection("orders").add({
-        'dateCreated': Timestamp.now(),
-        'byUserId': uid,
-        // 'content': content ?? '',
-        'done': false,
-        'orderNumber': orderNumber ?? '',
-        'deliveryToCity': deliveryToCity ?? '',
-        'deliveryCost': deliveryCost ?? 5000,
-        'customerName': customerName ?? '',
-        'customerAddress': customerAddress ?? '',
-        'customerPhone': customerPhone ?? '',
-        'amountAfterDelivery': amountAfterDelivery ?? 0,
-        'orderType': orderType ?? '',
-        'commit': commit ?? '',
-        // 'content': content ?? '',
-        'status': status ?? 'جاهز',
-        'statusTitle': statusTitle ?? 'جاهز',
-        // 'isPickup': isPickup ?? false,
-        // 'isReturn': isReturn ?? false,
-        // 'isSolve': isSolve ?? false,
-      });
+    var orderID = randomAlpha(20);
 
-      await _firestore.collection("orders").add({
+    try {
+      await _firestore
+          .collection("users")
+          .doc(uid)
+          .collection("orders")
+          .doc(orderID)
+          .set({
         'dateCreated': Timestamp.now(),
         'byUserId': uid,
-        // 'content': content,
+        // 'content': content ?? '',
+        'deliveryBoyId': '',
         'done': false,
         'orderNumber': orderNumber ?? '',
         'deliveryToCity': deliveryToCity ?? '',
@@ -100,6 +121,33 @@ class FireDb {
       });
     } catch (e) {
       print(e);
+      rethrow;
+    }
+
+    try {
+      await _firestore.collection("orders").doc(orderID).set({
+        'dateCreated': Timestamp.now(),
+        'byUserId': uid,
+        'deliveryBoyId': '',
+        // 'content': content,
+        'done': false,
+        'orderNumber': orderNumber ?? '',
+        'deliveryToCity': deliveryToCity ?? '',
+        'deliveryCost': deliveryCost ?? 5000,
+        'customerName': customerName ?? '',
+        'customerAddress': customerAddress ?? '',
+        'customerPhone': customerPhone ?? '',
+        'amountAfterDelivery': amountAfterDelivery ?? 0,
+        'orderType': orderType ?? '',
+        'commit': commit ?? '',
+        // 'content': content ?? '',
+        'status': status ?? 'جاهز',
+        'statusTitle': statusTitle ?? 'جاهز',
+        // 'isPickup': isPickup ?? false,
+        // 'isReturn': isReturn ?? false,
+        // 'isSolve': isSolve ?? false,
+      });
+    } catch (e) {
       rethrow;
     }
   }
@@ -165,10 +213,10 @@ class FireDb {
 
   Stream<List<OrderModel>> orderStreamByUserId(String uid) {
     return _firestore
-        .collection("users")
-        .doc(uid)
+        // .collection("users")
+        // .doc(uid)
         .collection("orders")
-        // .where('done', isEqualTo: false)
+        .where('byUserId', isEqualTo: uid)
         .orderBy('deliveryToCity')
         // .orderBy("dateCreated", descending: true)
 
@@ -205,7 +253,18 @@ class FireDb {
           .doc(clientId)
           .collection("orders")
           .doc(uid)
+          // .update({'status': 'راجع'});
+          //
           .update(order.toJson());
+
+      //  _firestore.collection("orders").doc(uid).update(order.toJson());
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+
+    try {
+      _firestore.collection("orders").doc(uid).update(order.toJson());
     } catch (e) {
       print(e);
       rethrow;

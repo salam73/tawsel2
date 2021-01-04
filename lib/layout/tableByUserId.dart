@@ -25,7 +25,7 @@ class TableByUserId extends StatelessWidget {
 
   var fireDb = FireDb();
 
-  var _listOption = ['تم التسليم', 'واصل', 'راجع', 'مؤجل', 'قيد التوصيل'];
+  var _listOption = ['تم الإستلام', 'واصل', 'راجع', 'مؤجل', 'قيد التوصيل'];
 
   OrderModel orderModel = OrderModel();
   OrderController orderController = Get.put(OrderController());
@@ -87,9 +87,9 @@ class TableByUserId extends StatelessWidget {
                     status: 'جاهز',
                   ),
                   statusButton(
-                    title: 'تم التسليم',
+                    title: 'تم الإستلام',
                     controller: orderController,
-                    status: 'تم التسليم',
+                    status: 'تم الإستلام',
                   ),
                   statusButton(
                       title: 'واصل',
