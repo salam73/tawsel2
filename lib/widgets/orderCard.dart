@@ -21,33 +21,33 @@ class OrderCard extends StatelessWidget {
     switch (order.status) {
       case 'جاهز':
         {
-          mycolor = null;
+          mycolor = Color(0xff808080);
         }
         break;
       case 'واصل':
         {
-          mycolor = Color(0xff8be08f);
+          mycolor = Color(0xff2a6e2e);
         }
         break;
 
       case 'راجع':
         {
-          mycolor = Color(0xffff8e7a);
+          mycolor = Color(0xff7a2a2a);
         }
         break;
       case 'مؤجل':
         {
-          mycolor = Color(0xfffce653);
+          mycolor = Color(0xffada92b);
         }
         break;
       case 'قيد التوصيل':
         {
-          mycolor = Color(0xff8bc7e0);
+          mycolor = Color(0xff2b50ad);
         }
         break;
       case 'تم الإستلام':
         {
-          mycolor = Color(0xff99caa0);
+          mycolor = Color(0xff2b8dad);
         }
         break;
 
@@ -75,12 +75,41 @@ class OrderCard extends StatelessWidget {
                 child: Container(
                   alignment: Alignment.centerRight,
                   child: Text(
+                    'تكلفة النقل :${order.deliveryCost.toString()}',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                        // color: (order.done) ? Colors.green : Colors.white
+                        ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    'المبلغ :${order.amountAfterDelivery.toString()}',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                        // color: (order.done) ? Colors.green : Colors.white
+                        ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
                     order.statusTitle,
                     style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      // color: (order.done) ? Colors.green : Colors.white
-                    ),
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                        // color: (order.done) ? Colors.green : Colors.white
+                        ),
                   ),
                 ),
               ),
@@ -90,10 +119,11 @@ class OrderCard extends StatelessWidget {
                   child: Text(
                     order.status,
                     style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      // color: (order.done) ? Colors.green : Colors.white
-                    ),
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                        // color: (order.done) ? Colors.green : Colors.white
+                        ),
                   ),
                 ),
               ),
@@ -103,10 +133,11 @@ class OrderCard extends StatelessWidget {
                   child: Text(
                     order.orderNumber,
                     style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      // color: (order.done) ? Colors.green : Colors.white
-                    ),
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                        // color: (order.done) ? Colors.green : Colors.white
+                        ),
                   ),
                 ),
               ),

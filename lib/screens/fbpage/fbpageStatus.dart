@@ -21,6 +21,8 @@ class FbPageStatus extends StatelessWidget {
   final ThemeController _themeController = Get.put(ThemeController());
 
   OrderController orderController = Get.put(OrderController());
+  final AuthController _authController = Get.find();
+  var mycolor = Color(0xff885566);
 
   var listStatusTitle = [
     'جاهز',
@@ -61,19 +63,12 @@ class FbPageStatus extends StatelessWidget {
         title: getUserName(),
         centerTitle: true,
         actions: [
-          Obx(
-            () => IconButton(
-              icon: getLightIcon(),
-              onPressed: () {
-                if (Get.isDarkMode) {
-                  Get.changeTheme(ThemeData.light());
-                  _themeController.themeChange = false;
-                } else {
-                  Get.changeTheme(ThemeData.dark());
-                  _themeController.themeChange = true;
-                }
-              },
-            ),
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              _authController.logOut();
+              // Get.to(Login());
+            },
           ),
         ],
       ),
@@ -91,6 +86,45 @@ class FbPageStatus extends StatelessWidget {
             child: ListView.builder(
                 itemCount: listStatusTitle.length,
                 itemBuilder: (_, index) {
+                  switch (listStatusTitle[index]) {
+                    case 'جاهز':
+                      {
+                        mycolor = Color(0xff808080);
+                      }
+                      break;
+                    case 'واصل':
+                      {
+                        mycolor = Color(0xff2a6e2e);
+                      }
+                      break;
+
+                    case 'راجع':
+                      {
+                        mycolor = Color(0xff7a2a2a);
+                      }
+                      break;
+                    case 'مؤجل':
+                      {
+                        mycolor = Color(0xffada92b);
+                      }
+                      break;
+                    case 'قيد التوصيل':
+                      {
+                        mycolor = Color(0xff2b50ad);
+                      }
+                      break;
+                    case 'تم الإستلام':
+                      {
+                        mycolor = Color(0xff2b8dad);
+                      }
+                      break;
+
+                    default:
+                      {
+                        //statements;
+                      }
+                      break;
+                  }
                   return InkWell(
                     onTap: () {
                       Get.to(FbPageHome(
@@ -98,9 +132,23 @@ class FbPageStatus extends StatelessWidget {
                       ));
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(28.0),
+                      padding: const EdgeInsets.all(18.0),
                       child: Container(
-                        color: Colors.lightBlue,
+                        constraints:
+                            BoxConstraints(minWidth: 100, maxWidth: 200),
+                        // padding: EdgeInsets.all(38),
+                        //  color: Colors.lightBlue,
+                        decoration: BoxDecoration(
+                          color: mycolor,
+                          // border: Border.all(
+                          //     width: 2,
+                          //     color: Colors.blue,
+                          //     style: BorderStyle.solid),
+                          // borderRadius: BorderRadius.all(
+                          //   Radius.circular(15),
+                          // ),
+                          shape: BoxShape.rectangle,
+                        ),
                         child: Text(
                           listStatusTitle[index],
                           textAlign: TextAlign.center,

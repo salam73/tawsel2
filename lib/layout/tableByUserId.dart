@@ -26,7 +26,14 @@ class TableByUserId extends StatelessWidget {
 
   var fireDb = FireDb();
 
-  var _listOption = ['تم الإستلام', 'واصل', 'راجع', 'مؤجل', 'قيد التوصيل'];
+  var _listOption = [
+    'تم الإستلام',
+    'واصل',
+    'راجع',
+    'مؤجل',
+    'قيد التوصيل',
+    'تم الدفع'
+  ];
 
   OrderModel orderModel = OrderModel();
   OrderController orderController = Get.put(OrderController());
@@ -41,7 +48,7 @@ class TableByUserId extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    updateLayout();
+    // updateLayout();
 
     print('orderController orderStatus:' + orderController.orderStatus.value);
     return Directionality(
@@ -109,6 +116,10 @@ class TableByUserId extends StatelessWidget {
                       title: 'قيد التوصيل',
                       controller: orderController,
                       status: 'قيد التوصيل'),
+                  statusButton(
+                      title: 'تم الدفع',
+                      controller: orderController,
+                      status: 'تم الدفع'),
                   SizedBox(
                     height: 20,
                   )
@@ -429,7 +440,7 @@ class TableByUserId extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text('المجموع: '),
+                Text('المبلغ مع التوصيل: '),
                 Obx(
                   () => Container(
                     alignment: Alignment.centerRight,
@@ -438,9 +449,9 @@ class TableByUserId extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text('النقل: '),
+                Text('كلفة النقل: '),
                 Obx(() => Text(orderController.getDeliveryCost().toString())),
-                Text('الباقي: '),
+                Text('صافي المبلغ: '),
                 Obx(
                   () => Text(
                     (orderController.getAllAmount() -
@@ -492,10 +503,10 @@ class TableByUserId extends StatelessWidget {
         onTap: () {
           controller.orderBySortingName.value = engTitle;
 
-          controller.streamStatus(
-              orderByName: engTitle,
-              status: controller.orderStatus.value,
-              clientId: controller.clientId.value);
+          // controller.streamStatus(
+          //     orderByName: engTitle,
+          //     status: controller.orderStatus.value,
+          //     clientId: controller.clientId.value);
 
           print('orderController orderStatus:' + controller.orderStatus.value);
         },

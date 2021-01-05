@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_web2/widgets/orderAlert.dart';
 
+import '../../models/order.dart';
+
 class FbPageHome extends StatelessWidget {
   final AuthController _authController = Get.find();
   final UserController userModel = Get.find();
@@ -54,6 +56,16 @@ class FbPageHome extends StatelessWidget {
     orderController.streamStatus(status: status, clientId: userModel.user.id);
   }
 
+  int getAllAmont(List<OrderModel> list) {
+    allAmount.value = 0;
+    list.forEach((element) {
+      //print(element.amountAfterDelivery.toString());
+      allAmount =
+          allAmount + (element.amountAfterDelivery - element.deliveryCost);
+    });
+    return allAmount.value;
+  }
+
   @override
   Widget build(BuildContext context) {
     print(myStatus);
@@ -63,29 +75,7 @@ class FbPageHome extends StatelessWidget {
       appBar: AppBar(
         title: getUserName(),
         centerTitle: true,
-        actions: [
-          Obx(
-            () => IconButton(
-              icon: getLightIcon(),
-              onPressed: () {
-                if (Get.isDarkMode) {
-                  Get.changeTheme(ThemeData.light());
-                  _themeController.themeChange = false;
-                } else {
-                  Get.changeTheme(ThemeData.dark());
-                  _themeController.themeChange = true;
-                }
-              },
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              _authController.logOut();
-              // Get.to(Login());
-            },
-          ),
-        ],
+        actions: [],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -104,20 +94,30 @@ class FbPageHome extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-
           GetX<OrderController>(
             init: Get.put<OrderController>(OrderController()),
             builder: (OrderController orderController) {
               if (orderController != null &&
                   orderController.allOrders != null) {
                 return Expanded(
-                  child: ListView.builder(
-                    itemCount: orderController.allOrders.length,
-                    itemBuilder: (_, index) {
-                      return OrderCard(
-                          uid: _authController.user.uid,
-                          order: orderController.allOrders[index]);
-                    },
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: orderController.allOrders.length,
+                          itemBuilder: (_, index) {
+                            return OrderCard(
+                                uid: _authController.user.uid,
+                                order: orderController.allOrders[index]);
+                          },
+                        ),
+                      ),
+                      Text(
+                        'المبلغ الاجمالي:${getAllAmont(orderController.allOrders).toString()}',
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      SizedBox(height: 30),
+                    ],
                   ),
                 );
               } else {
@@ -129,7 +129,7 @@ class FbPageHome extends StatelessWidget {
               }
             },
           ),
-          //  Obx(() => Text('subtitle' + allAmount.toString() ?? ''))
+          //  Obx(() => Text('subtitle' + allAmount.value.toString() ?? ''))
         ],
       ),
     );
