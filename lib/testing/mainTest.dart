@@ -50,7 +50,8 @@ class MainTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    orderController.streamStatus(clientId: 'zPx1WqwCg3W64KfbSYyZSJvH11y2');
+    orderController.streamOrdersByUserAndStatus(
+        clientId: 'zPx1WqwCg3W64KfbSYyZSJvH11y2');
 
     return Directionality(
       textDirection: ui.TextDirection.rtl,
@@ -101,10 +102,10 @@ class MainTest extends StatelessWidget {
                 builder: (OrderController orderController) {
                   // orderController.sumAmount.value = 0;
                   if (orderController != null &&
-                      orderController.allOrders != null) {
+                      orderController.allOrdersUser != null) {
                     return Expanded(
                       child: ListView.builder(
-                        itemCount: orderController.allOrders.length,
+                        itemCount: orderController.allOrdersUser.length,
                         itemBuilder: (_, index) {
                           // orderController.sumAmount.value =
                           //     orderController.sumAmount.value +
@@ -130,36 +131,38 @@ class MainTest extends StatelessWidget {
                                     onTap: () {
                                       Get.to(OrderDetailByAdmin(
                                         orderId: orderController
-                                            .allOrders[index].orderId,
+                                            .allOrdersUser[index].orderId,
                                         userId: orderController
-                                            .allOrders[index].byUserId,
+                                            .allOrdersUser[index].byUserId,
                                       ));
                                     },
                                     child: Text(orderController
-                                        .allOrders[index].orderNumber),
+                                        .allOrdersUser[index].orderNumber),
                                   )),
                                   Expanded(
                                       child: Text(orderController
-                                          .allOrders[index].customerName)),
+                                          .allOrdersUser[index].customerName)),
                                   Expanded(
                                       child: Text(orderController
-                                          .allOrders[index].deliveryToCity)),
+                                          .allOrdersUser[index]
+                                          .deliveryToCity)),
                                   Expanded(
                                       child: Text(orderController
-                                          .allOrders[index].amountAfterDelivery
+                                          .allOrdersUser[index]
+                                          .amountAfterDelivery
                                           .toString())),
                                   Expanded(
                                       child: InkWell(
                                     onTap: () {},
                                     child: Text(orderController
-                                        .allOrders[index].deliveryCost
+                                        .allOrdersUser[index].deliveryCost
                                         .toString()),
                                   )),
                                   Expanded(
                                     child: Text(
                                       DateFormat('yyyy-MM-dd').format(
                                           orderController
-                                              .allOrders[index].dateCreated
+                                              .allOrdersUser[index].dateCreated
                                               .toDate()),
                                     ),
                                   ),
@@ -194,7 +197,7 @@ class MainTest extends StatelessWidget {
                                                 orderController.clientId.value);
 
                                             orderModel = orderController
-                                                .allOrders[index];
+                                                .allOrdersUser[index];
                                             orderModel.status =
                                                 _listOption[_valueOBX.value];
 
@@ -203,7 +206,8 @@ class MainTest extends StatelessWidget {
                                                 clientId:
                                                     'zPx1WqwCg3W64KfbSYyZSJvH11y2',
                                                 uid: orderController
-                                                    .allOrders[index].orderId);
+                                                    .allOrdersUser[index]
+                                                    .orderId);
 
                                             //  updateLayout();
 
@@ -223,7 +227,7 @@ class MainTest extends StatelessWidget {
                                             Get.back();
                                           },
                                           title:
-                                              'تغير حالة الطلب ${orderController.allOrders[index].orderNumber} إلى :',
+                                              'تغير حالة الطلب ${orderController.allOrdersUser[index].orderNumber} إلى :',
                                           content: Column(
                                             children: <Widget>[
                                               for (int i = 0;
@@ -280,11 +284,11 @@ class MainTest extends StatelessWidget {
                                             ],
                                           ),
                                           middleText: orderController
-                                              .allOrders[index].orderId);
+                                              .allOrdersUser[index].orderId);
                                     },
                                     child: Container(
                                       child: Text(orderController
-                                          .allOrders[index].statusTitle),
+                                          .allOrdersUser[index].statusTitle),
                                       color: Colors.lightBlueAccent,
                                     ),
                                   ))
@@ -330,10 +334,11 @@ class MainTest extends StatelessWidget {
         // controller.orderStatus.value = status;
         // orderStatus.value = status;
 
-        controller.streamStatus(
+        controller.streamOrdersByUserAndStatus(
             status: title, clientId: 'zPx1WqwCg3W64KfbSYyZSJvH11y2');
 
-        print('orderController orderStatus:' + controller.orderStatus.value);
+        print('orderController orderStatus:' +
+            controller.orderStatusByUser.value);
         print('orderStatusOBX:' + orderStatusOBX.value);
         print('status:' + status);
         /*  getAllAmount(status: status);*/

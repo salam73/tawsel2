@@ -15,18 +15,18 @@ class Test2 extends StatelessWidget {
         () => Column(
           children: [
             Container(
-              child: Text(status.orderStatus.value),
+              child: Text(status.orderStatusByUser.value),
             ),
             RaisedButton(
               child: Text('ok'),
               onPressed: () {
-                status.orderStatus.value = 'hello';
+                status.orderStatusByUser.value = 'hello';
               },
             ),
             RaisedButton(
               child: Text('ok'),
               onPressed: () {
-                status.orderStatus.value = 'salam';
+                status.orderStatusByUser.value = 'salam';
               },
             ),
           ],

@@ -101,15 +101,15 @@ class Home extends StatelessWidget {
             init: Get.put<OrderController>(OrderController()),
             builder: (OrderController orderController) {
               if (orderController != null &&
-                  orderController.allOrders != null) {
+                  orderController.allOrdersUser != null) {
                 return Expanded(
                   child: ListView.builder(
-                    itemCount: orderController.allOrders.length,
+                    itemCount: orderController.allOrdersUser.length,
                     itemBuilder: (_, index) {
                       // return Text('salam');
                       return OrderCard(
                           uid: _authController.user.uid,
-                          order: orderController.allOrders[index]);
+                          order: orderController.allOrdersUser[index]);
                     },
                   ),
                 );

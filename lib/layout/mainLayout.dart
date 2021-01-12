@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web2/controllers/authController.dart';
 import 'package:flutter_web2/controllers/userController.dart';
+import 'package:flutter_web2/layout/provincesLayout.dart';
 import 'package:flutter_web2/screens/auth/login.dart';
 import 'package:get/get.dart';
 import 'package:flutter_web2/layout/usersLayout.dart';
@@ -48,17 +49,23 @@ class MainLayout extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  color: Colors.lightBlueAccent,
-                  child: Text(
-                    'محافظات',
-                    style: TextStyle(
-                        fontSize: (MediaQuery.of(context).size.width * 0.3) / 5,
-                        color: Colors.white),
-                  )),
+              InkWell(
+                onTap: () {
+                  Get.to(ProvincesLayout());
+                },
+                child: Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    color: Colors.lightBlueAccent,
+                    child: Text(
+                      'محافظات',
+                      style: TextStyle(
+                          fontSize:
+                              (MediaQuery.of(context).size.width * 0.3) / 5,
+                          color: Colors.white),
+                    )),
+              ),
               /* RaisedButton(
                 onPressed: () {
                   Get.to(UserList());

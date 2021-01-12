@@ -24,9 +24,9 @@ class OrderCard extends StatelessWidget {
           mycolor = Color(0xff808080);
         }
         break;
-      case 'واصل':
+      case 'تم الإستلام':
         {
-          mycolor = Color(0xff2a6e2e);
+          mycolor = Color(0xff2b8dad);
         }
         break;
 
@@ -45,9 +45,15 @@ class OrderCard extends StatelessWidget {
           mycolor = Color(0xff2b50ad);
         }
         break;
-      case 'تم الإستلام':
+      case 'واصل':
         {
-          mycolor = Color(0xff2b8dad);
+          mycolor = Color(0xff2a6e2e);
+        }
+        break;
+
+      case 'تم الدفع':
+        {
+          mycolor = Colors.green;
         }
         break;
 
@@ -67,79 +73,96 @@ class OrderCard extends StatelessWidget {
         margin: EdgeInsets.fromLTRB(10, 2.5, 10, 2.5),
         child: Container(
           margin: EdgeInsets.all(5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //crossAxisAlignment: CrossAxisAlignment.end,
+          child: Column(
             children: [
-              Expanded(
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'تكلفة النقل :${order.deliveryCost.toString()}',
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                        // color: (order.done) ? Colors.green : Colors.white
-                        ),
+              Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      //alignment: Alignment.center,
+                      child: Text(
+                        order.orderNumber,
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            // color: (order.done) ? Colors.green : Colors.white
+                            ),
+                      ),
+                    ),
                   ),
-                ),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        order.status,
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            // color: (order.done) ? Colors.green : Colors.white
+                            ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        order.statusTitle,
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            // color: (order.done) ? Colors.green : Colors.white
+                            ),
+                      ),
+                    ),
+                  )
+                ],
               ),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'المبلغ :${order.amountAfterDelivery.toString()}',
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                        // color: (order.done) ? Colors.green : Colors.white
-                        ),
-                  ),
-                ),
+              Divider(
+                thickness: 2,
+                color: Colors.white,
               ),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    order.statusTitle,
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                        // color: (order.done) ? Colors.green : Colors.white
-                        ),
+              Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        'تكلفة النقل :${order.deliveryCost.toString()}',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            // color: (order.done) ? Colors.green : Colors.white
+                            ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    order.status,
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                        // color: (order.done) ? Colors.green : Colors.white
-                        ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        'المبلغ :${order.amountAfterDelivery.toString()}',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            // color: (order.done) ? Colors.green : Colors.white
+                            ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    order.orderNumber,
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                        // color: (order.done) ? Colors.green : Colors.white
-                        ),
-                  ),
-                ),
+                ],
               ),
             ],
           ),

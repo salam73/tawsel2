@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site":"tawselat",
+    "site":"fbpage",
     "public": "build/web",
     "ignore": [
       "firebase.json",

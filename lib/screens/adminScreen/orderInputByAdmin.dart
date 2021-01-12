@@ -107,7 +107,7 @@ class OrderInputByAdmin extends StatelessWidget {
     'الرمادي',
     'الحلة‎',
     'بغداد',
-    'البصره',
+    'البصرة',
     'الناصرية',
     'بعقوبة‎',
     'دهوك',

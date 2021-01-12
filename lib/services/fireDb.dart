@@ -192,15 +192,15 @@ class FireDb {
     });
   }
 
-  Stream<List<OrderModel>> allOrderStreamByStatus(
-      {String status, String sortingName, String clientId}) {
+  Stream<List<OrderModel>> allOrderStreamByUserAndStatus(
+      {String status, String sortBy, String clientId}) {
     return _firestore
         .collection("users")
         .doc(clientId)
         .collection("orders")
         .where('status', isEqualTo: status ?? '')
         // .where('byUserId', isEqualTo: clientId ?? '')
-        .orderBy(sortingName ?? 'dateCreated', descending: true)
+        .orderBy(sortBy ?? 'dateCreated', descending: true)
         .snapshots()
         .map((QuerySnapshot query) {
       List<OrderModel> retVal = List();
@@ -231,6 +231,53 @@ class FireDb {
     });
   }
 
+  Stream<List<OrderModel>> orderStreamByProvinceAndStatus({
+    String deliveryToCity,
+    String status,
+  }) {
+    return _firestore
+        // .collection("users")
+        // .doc(uid)
+        .collection("orders")
+        .where('deliveryToCity', isEqualTo: deliveryToCity)
+        .where('status', isEqualTo: status)
+        // .orderBy('deliveryToCity')
+        // .orderBy("dateCreated", descending: true)
+
+        //
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<OrderModel> retVal = List();
+      query.docs.forEach((element) {
+        retVal.add(OrderModel.fromDocumentSnapshot(element));
+      });
+      return retVal;
+    });
+  }
+
+  Stream<List<OrderModel>> orderStreamByProvince({
+    String deliveryToCity,
+  }) {
+    return _firestore
+        // .collection("users")
+        // .doc(uid)
+        .collection("orders")
+        .where('deliveryToCity', isEqualTo: deliveryToCity)
+
+        // .orderBy('deliveryToCity')
+        // .orderBy("dateCreated", descending: true)
+
+        //
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<OrderModel> retVal = List();
+      query.docs.forEach((element) {
+        retVal.add(OrderModel.fromDocumentSnapshot(element));
+      });
+      return retVal;
+    });
+  }
+
   Future<void> updateOrder(OrderModel order, String uid) async {
     try {
       _firestore
@@ -245,13 +292,49 @@ class FireDb {
     }
   }
 
-  Future<void> updateOrder2(
+  Future<void> updateOrderByUserId(
       {OrderModel order, String clientId, String uid}) async {
     try {
-      _firestore.collection("users").doc(clientId).collection("orders").doc(uid)
+      _firestore
+          .collection("users")
+          .doc(clientId)
+          .collection("orders")
+          .doc(uid)
           // .update({'status': 'راجع'});
           //
-          .update({'status': order.status, 'statusTitle': order.statusTitle});
+          // .update({'status': order.status, 'statusTitle': order.statusTitle});
+
+          //  _firestore.collection("orders").doc(uid)
+          .update(order.toJson());
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+
+    try {
+      _firestore
+          .collection("orders")
+          .doc(uid)
+          // .update({'status': order.status, 'statusTitle': order.statusTitle});
+          .update(order.toJson());
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<void> updateOrderBy(
+      {OrderModel order, String clientId, String uid}) async {
+    try {
+      _firestore
+          .collection("users")
+          .doc(clientId)
+          .collection("orders")
+          .doc(uid)
+          // .update({'status': 'راجع'});
+          //
+          // .update({'status': order.status, 'statusTitle': order.statusTitle});
+          .update(order.toJson());
 
       //  _firestore.collection("orders").doc(uid).update(order.toJson());
     } catch (e) {
@@ -263,7 +346,8 @@ class FireDb {
       _firestore
           .collection("orders")
           .doc(uid)
-          .update({'status': order.status, 'statusTitle': order.statusTitle});
+          // .update({'status': order.status, 'statusTitle': order.statusTitle});
+          .update(order.toJson());
     } catch (e) {
       print(e);
       rethrow;

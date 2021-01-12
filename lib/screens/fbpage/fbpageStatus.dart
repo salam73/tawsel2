@@ -27,10 +27,11 @@ class FbPageStatus extends StatelessWidget {
   var listStatusTitle = [
     'جاهز',
     'تم الإستلام',
-    'واصل',
     'راجع',
     'مؤجل',
-    'قيد التوصيل'
+    'قيد التوصيل',
+    'واصل',
+    'تم الدفع'
   ];
 
   getLightIcon() {
@@ -92,9 +93,9 @@ class FbPageStatus extends StatelessWidget {
                         mycolor = Color(0xff808080);
                       }
                       break;
-                    case 'واصل':
+                    case 'تم الإستلام':
                       {
-                        mycolor = Color(0xff2a6e2e);
+                        mycolor = Color(0xff2b8dad);
                       }
                       break;
 
@@ -113,9 +114,15 @@ class FbPageStatus extends StatelessWidget {
                         mycolor = Color(0xff2b50ad);
                       }
                       break;
-                    case 'تم الإستلام':
+                    case 'واصل':
                       {
-                        mycolor = Color(0xff2b8dad);
+                        mycolor = Color(0xff2a6e2e);
+                      }
+                      break;
+
+                    case 'تم الدفع':
+                      {
+                        mycolor = Colors.green;
                       }
                       break;
 
@@ -127,9 +134,10 @@ class FbPageStatus extends StatelessWidget {
                   }
                   return InkWell(
                     onTap: () {
+                      print(_authController.user.uid);
                       Get.to(FbPageHome(
-                        myStatus: listStatusTitle[index],
-                      ));
+                          // myStatus: listStatusTitle[index],
+                          ));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(18.0),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_web2/controllers/authController.dart';
 import 'package:flutter_web2/controllers/themeController.dart';
 import 'package:flutter_web2/controllers/orderController.dart';
@@ -13,124 +14,226 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_web2/widgets/orderAlert.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../models/order.dart';
 
 class FbPageHome extends StatelessWidget {
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final AuthController _authController = Get.find();
-  final UserController userModel = Get.find();
-  //
-  final ThemeController _themeController = Get.put(ThemeController());
-  OrderController orderController = Get.put(OrderController());
-
-  var allAmount = 0.obs;
-
-  final String myStatus;
-
-  FbPageHome({Key key, this.myStatus}) : super(key: key);
-
-  getLightIcon() {
-    if (_themeController.themeChange) {
-      return Icon(Icons.lightbulb);
-    } else {
-      return Icon(Icons.lightbulb_outline);
-    }
-  }
-
-  getUserName() {
-    return GetX<UserController>(
-      init: Get.put(UserController()),
-      initState: (_) async {
-        Get.find<UserController>().user =
-            await FireDb().getUser(uid: Get.find<AuthController>().user.uid);
-      },
-      builder: (_userController) {
-        return Text((_userController.user == null)
-            ? ""
-            : _userController.user.name.toString());
-      },
-    );
-  }
-
-  void updateLayout({String status}) {
-    orderController.streamStatus(status: status, clientId: userModel.user.id);
-  }
-
-  int getAllAmont(List<OrderModel> list) {
-    allAmount.value = 0;
+  var myStatus = 'جاهز'.obs;
+  int getAmount(List<QueryDocumentSnapshot> list) {
+    int start = 0;
     list.forEach((element) {
-      //print(element.amountAfterDelivery.toString());
-      allAmount =
-          allAmount + (element.amountAfterDelivery - element.deliveryCost);
+      start = start + element['amountAfterDelivery'];
     });
-    return allAmount.value;
+    return start;
+  }
+
+  int getDeliveryCost(List<QueryDocumentSnapshot> list) {
+    int start = 0;
+    list.forEach((element) {
+      start = start + element['deliveryCost'];
+    });
+    return start;
   }
 
   @override
   Widget build(BuildContext context) {
-    print(myStatus);
-    updateLayout(status: myStatus);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: getUserName(),
-        centerTitle: true,
-        actions: [],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          // OrderAlert().addOrderDialog();
-          Get.to(OrderInput());
-        },
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            myStatus,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () {
+                _authController.logOut();
+                // Get.to(Login());
+              },
+            ),
+          ],
+          title: Obx(
+            () => Text(
+              '${myStatus.value}',
+              style: GoogleFonts.cairo(),
             ),
           ),
-          GetX<OrderController>(
-            init: Get.put<OrderController>(OrderController()),
-            builder: (OrderController orderController) {
-              if (orderController != null &&
-                  orderController.allOrders != null) {
-                return Expanded(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: orderController.allOrders.length,
-                          itemBuilder: (_, index) {
-                            return OrderCard(
-                                uid: _authController.user.uid,
-                                order: orderController.allOrders[index]);
-                          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            // OrderAlert().addOrderDialog();
+            Get.to(OrderInput());
+          },
+        ),
+        body: Center(
+          child: Container(
+            child: Obx(
+              () => StreamBuilder(
+                stream: _firestore
+                    .collection('orders')
+                    .where('byUserId', isEqualTo: _authController.user.uid)
+                    .where('status', isEqualTo: myStatus.value)
+                    .snapshots(),
+                builder: (_, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
+                      children: [
+                        Obx(
+                          () => Text(
+                              '${myStatus.value}: ${snapshot.data.docs.length}'),
                         ),
-                      ),
-                      Text(
-                        'المبلغ الاجمالي:${getAllAmont(orderController.allOrders).toString()}',
-                        style: TextStyle(fontSize: 30),
-                      ),
-                      SizedBox(height: 30),
-                    ],
-                  ),
-                );
-              } else {
-                return Container(
-                    child: Center(
-                        child: CircularProgressIndicator(
-                  value: 10,
-                )));
-              }
-            },
+                        Wrap(
+                          children: [
+                            statusButton(title: 'جاهز', color: Colors.blue),
+                            statusButton(
+                                title: 'تم الإستلام', color: Colors.grey),
+                            statusButton(title: 'راجع', color: Colors.red),
+                            statusButton(title: 'مؤجل', color: Colors.purple),
+                            statusButton(
+                                title: 'قيد التوصيل', color: Colors.amber),
+                            statusButton(
+                                title: 'واصل', color: Colors.greenAccent),
+                            statusButton(
+                                title: 'تم الدفع', color: Colors.green),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: snapshot.data.docs.length,
+                            itemBuilder: (_, index) {
+                              if (snapshot.data.docs.length > 0)
+                                return Card(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          (index + 1).toString(),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            buttonTitle(
+                                                list: snapshot.data.docs,
+                                                index: index,
+                                                title: 'customerName'),
+                                            buttonTitle(
+                                                list: snapshot.data.docs,
+                                                index: index,
+                                                title: 'customerAddress'),
+                                            buttonTitle(
+                                                list: snapshot.data.docs,
+                                                index: index,
+                                                title: 'deliveryToCity'),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            buttonTitle(
+                                                list: snapshot.data.docs,
+                                                index: index,
+                                                title: 'customerPhone'),
+                                            buttonTitle(
+                                                list: snapshot.data.docs,
+                                                index: index,
+                                                title: 'orderType'),
+                                            buttonTitle(
+                                                list: snapshot.data.docs,
+                                                index: index,
+                                                title: 'commit'),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          children: [
+                                            buttonTitle(
+                                                list: snapshot.data.docs,
+                                                index: index,
+                                                title: 'amountAfterDelivery'),
+                                            buttonTitle(
+                                                list: snapshot.data.docs,
+                                                index: index,
+                                                title: 'deliveryCost'),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            buttonTitle(
+                                                list: snapshot.data.docs,
+                                                index: index,
+                                                title: 'status'),
+                                            buttonTitle(
+                                                list: snapshot.data.docs,
+                                                index: index,
+                                                title: 'statusTitle'),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              return Text('noDataa');
+                            },
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text(getAmount(snapshot.data.docs).toString()),
+                            Text(
+                                getDeliveryCost(snapshot.data.docs).toString()),
+                          ],
+                        )
+                      ],
+                    );
+                  }
+
+                  return Text('noData');
+                },
+              ),
+            ),
           ),
-          //  Obx(() => Text('subtitle' + allAmount.value.toString() ?? ''))
-        ],
+        ),
+      ),
+    );
+  }
+
+  Widget buttonTitle(
+      {List<QueryDocumentSnapshot> list, int index, String title}) {
+    return Container(
+      child: Text(
+        list[index][title].toString(),
+      ),
+      // alignment: Alignment.centerRight,
+    );
+  }
+
+  Widget statusButton({String title, Color color}) {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: RaisedButton(
+        color: color,
+        onPressed: () {
+          myStatus.value = title;
+        },
+        child: Text(title, style: TextStyle(color: Colors.white)),
       ),
     );
   }

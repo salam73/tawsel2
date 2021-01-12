@@ -8,9 +8,14 @@ import 'package:get/get.dart';
 
 class OrderController extends GetxController {
   Rx<List<OrderModel>> orderList = Rx<List<OrderModel>>();
-  Rx<List<OrderModel>> allOrderList = Rx<List<OrderModel>>();
+  Rx<List<OrderModel>> allOrderListByUser = Rx<List<OrderModel>>();
+  Rx<List<OrderModel>> allOrderListByProvince = Rx<List<OrderModel>>();
+  Rx<List<OrderModel>> allOrderListByProvinceFilterByProvince =
+      Rx<List<OrderModel>>();
 
-  var orderStatus = ''.obs;
+  var orderStatusByUser = ''.obs;
+  var orderStatusByProvince = ''.obs;
+  var deliveryToCity = ''.obs;
   var orderBySortingName = 'dateCreated'.obs;
   var sumAmount = 0.obs;
   var sumDelivery = 0.obs;
@@ -20,7 +25,10 @@ class OrderController extends GetxController {
   var sumOfDeliveryCostOBX = 0.obs;
 
   List<OrderModel> get orders => orderList.value;
-  List<OrderModel> get allOrders => allOrderList.value;
+  List<OrderModel> get allOrdersUser => allOrderListByUser.value;
+  List<OrderModel> get allOrdersProvince => allOrderListByProvince.value;
+  List<OrderModel> get allOrdersProvinceFilterByProvince =>
+      allOrderListByProvinceFilterByProvince.value;
 
   @override
   @mustCallSuper
@@ -33,9 +41,12 @@ class OrderController extends GetxController {
       var user = Get.find<UserController>().user;
       orderList.bindStream(FireDb().orderStream(user.id));
     }
-    allOrderList.bindStream(FireDb().allOrderStreamByStatus(
-        status: orderStatus.value,
-        sortingName: orderBySortingName
+    allOrderListByUser.bindStream(FireDb().allOrderStreamByUserAndStatus(
+        status: orderStatusByUser.value, sortBy: orderBySortingName.value));
+    //stream coming from firebase For todo List
+    allOrderListByProvince.bindStream(FireDb().allOrderStreamByUserAndStatus(
+        status: orderStatusByProvince.value,
+        sortBy: orderBySortingName
             .value)); //stream coming from firebase For todo List
 
     super.onInit();
@@ -47,7 +58,7 @@ class OrderController extends GetxController {
 
   int getAllAmount() {
     int allAmount = 0;
-    allOrders.forEach((element) {
+    allOrdersUser.forEach((element) {
       allAmount = allAmount + element.amountAfterDelivery;
     });
     return allAmount;
@@ -55,7 +66,7 @@ class OrderController extends GetxController {
 
   int getDeliveryCost() {
     int deliveryCost = 0;
-    allOrders.forEach((element) {
+    allOrdersUser.forEach((element) {
       deliveryCost = deliveryCost + element.deliveryCost;
     });
     return deliveryCost;
@@ -65,15 +76,26 @@ class OrderController extends GetxController {
   //   return 'printController' + sumAmount.toString();
   // }
 
-  void streamStatus({String status, String orderByName, String clientId}) {
-    allOrderList.bindStream(FireDb().allOrderStreamByStatus(
-        status: status,
-        sortingName: orderBySortingName.value,
-        clientId: clientId));
+  void streamOrdersByUserAndStatus(
+      {String status, String orderByName, String clientId}) {
+    allOrderListByUser.bindStream(FireDb().allOrderStreamByUserAndStatus(
+        status: status, sortBy: orderBySortingName.value, clientId: clientId));
+  }
+
+  void streamOrdersByProvinceAndStatus({String deliveryToCity, String status}) {
+    allOrderListByProvince.bindStream(FireDb().orderStreamByProvinceAndStatus(
+        deliveryToCity: deliveryToCity, status: status));
+  }
+
+  void streamOrdersByProvince({String deliveryToCity}) {
+    allOrderListByProvinceFilterByProvince.bindStream(
+        FireDb().orderStreamByProvince(deliveryToCity: deliveryToCity));
   }
 
   void clear() {
+    // ignore: deprecated_member_use
     this.orderList.value = List<OrderModel>();
-    this.allOrderList.value = List<OrderModel>();
+    // ignore: deprecated_member_use
+    this.allOrderListByUser.value = List<OrderModel>();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_web2/controllers/authController.dart';
 import 'package:flutter_web2/controllers/userController.dart';
 import 'package:flutter_web2/layout/mainLayout.dart';
+import 'package:flutter_web2/layout/provincesLayout.dart';
 import 'package:flutter_web2/models/user.dart';
 import 'package:flutter_web2/receivingBoy/receiveHome.dart';
 import 'package:flutter_web2/screens/OrdersListByUser.dart';
@@ -41,8 +42,9 @@ class Root extends GetWidget<AuthController> {
           // return HomeAdmin();
           // return AdminHome();
           //  return ReceiveHome();
-          // return FbPageStatus();
-          return MainLayout();
+          return FbPageHome();
+          // return MainLayout();
+          return ProvincesLayout();
           // return OrdersList();
           // return UserList();
           // return OrderInput(
@@ -52,7 +54,8 @@ class Root extends GetWidget<AuthController> {
           // return Test2();
           // return MainTest();
           // return ReceiveHome();
-          return MainLayout();
+          // return ProvincesLayout();
+          // return MainLayout();
           // return MainTest();
           // return AdminHome();
           // return HomeAdmin();

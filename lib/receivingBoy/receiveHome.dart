@@ -78,7 +78,7 @@ class ReceiveHome extends StatelessWidget {
                         print(e.id.toString());
 
                         orderController.clientId.value = e.id;
-                        orderController.orderStatus.value = 'جاهز';
+                        orderController.orderStatusByUser.value = 'جاهز';
                         Get.find<UserController>().currentUser.value =
                             e['name'];
 

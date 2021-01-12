@@ -18,22 +18,20 @@ import 'dart:ui' as ui;
 import 'package:flutter_web2/services/fireDb.dart';
 
 // ignore: must_be_immutable
-class TableByUserId extends StatelessWidget {
+class TableByProvinceId extends StatelessWidget {
   var orderStatusOBX = ''.obs;
   var headerStatusOBX = ''.obs;
   var orderTitleStatusOBX = ''.obs;
   var _valueOBX = 0.obs;
 
-  var myStatus = '';
-
   var fireDb = FireDb();
 
   var _listOption = [
     'تم الإستلام',
+    'واصل',
     'راجع',
     'مؤجل',
     'قيد التوصيل',
-    'واصل',
     'تم الدفع'
   ];
 
@@ -43,20 +41,23 @@ class TableByUserId extends StatelessWidget {
   var deliveryCostController = TextEditingController();
 
   void updateLayout({String status}) {
-    orderController.streamOrdersByUserAndStatus(
-        status: status ?? orderController.orderStatusByUser.value,
-        clientId: orderController.clientId.value);
+    orderController.streamOrdersByProvinceAndStatus(
+        status: status ?? orderController.orderStatusByProvince.value,
+        deliveryToCity: orderController.deliveryToCity.value);
+
+    print('provinceName: ${orderController.deliveryToCity.value}');
   }
 
   @override
   Widget build(BuildContext context) {
     updateLayout(status: 'جاهز');
 
+    //print('orderController orderStatus:' + orderController.orderStatus.value);
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(Get.find<UserController>().currentUser.value,
+          title: Text(orderController.deliveryToCity.value,
               style: GoogleFonts.cairo()),
         ),
         body: Center(
@@ -68,14 +69,14 @@ class TableByUserId extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    myStatus,
+                    orderController.orderStatusByUser.toString(),
                     style: TextStyle(fontSize: 25),
                   ),
                   SizedBox(
                     width: 10,
                   ),
                   Text(
-                    orderController.allOrdersUser.length.toString(),
+                    orderController.allOrdersProvince.length.toString(),
                     style: TextStyle(fontSize: 25),
                   ),
                 ],
@@ -85,7 +86,7 @@ class TableByUserId extends StatelessWidget {
               height: 20,
             ),
 
-            //Obx(() => Text(orderController.allOrders.length.toString())),
+            //Obx(() => Text(orderController.allOrdersProvince.length.toString())),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -102,30 +103,25 @@ class TableByUserId extends StatelessWidget {
                     status: 'تم الإستلام',
                   ),
                   statusButton(
-                    title: 'راجع',
-                    controller: orderController,
-                    status: 'راجع',
-                  ),
+                      title: 'واصل',
+                      controller: orderController,
+                      status: 'واصل'),
                   statusButton(
-                    title: 'مؤجل',
-                    controller: orderController,
-                    status: 'مؤجل',
-                  ),
+                      title: 'راجع',
+                      controller: orderController,
+                      status: 'راجع'),
                   statusButton(
-                    title: 'قيد التوصيل',
-                    controller: orderController,
-                    status: 'قيد التوصيل',
-                  ),
+                      title: 'مؤجل',
+                      controller: orderController,
+                      status: 'مؤجل'),
                   statusButton(
-                    title: 'واصل',
-                    controller: orderController,
-                    status: 'واصل',
-                  ),
+                      title: 'قيد التوصيل',
+                      controller: orderController,
+                      status: 'قيد التوصيل'),
                   statusButton(
-                    title: 'تم الدفع',
-                    controller: orderController,
-                    status: 'تم الدفع',
-                  ),
+                      title: 'تم الدفع',
+                      controller: orderController,
+                      status: 'تم الدفع'),
                   SizedBox(
                     height: 20,
                   )
@@ -191,15 +187,15 @@ class TableByUserId extends StatelessWidget {
               builder: (OrderController orderController) {
                 // orderController.sumAmount.value = 0;
                 if (orderController != null &&
-                    orderController.allOrdersUser != null) {
+                    orderController.allOrdersProvince != null) {
                   return Expanded(
                     child: ListView.builder(
-                      itemCount: orderController.allOrdersUser.length,
+                      itemCount: orderController.allOrdersProvince.length,
                       itemBuilder: (_, index) {
                         // orderController.sumAmount.value =
                         //     orderController.sumAmount.value +
                         //         orderController
-                        //             .allOrders[index].amountAfterDelivery;
+                        //             .allOrdersProvince[index].amountAfterDelivery;
 
                         return Column(
                           children: [
@@ -219,26 +215,27 @@ class TableByUserId extends StatelessWidget {
                                   onTap: () {
                                     Get.to(OrderDetailByAdmin(
                                       orderId: orderController
-                                          .allOrdersUser[index].orderId,
+                                          .allOrdersProvince[index].orderId,
                                       userId: orderController
-                                          .allOrdersUser[index].byUserId,
+                                          .allOrdersProvince[index].byUserId,
                                     ));
                                   },
                                   child: Text(orderController
-                                      .allOrdersUser[index].orderNumber),
+                                      .allOrdersProvince[index].orderNumber),
                                 )),
                                 Expanded(
                                     child: Text(orderController
-                                        .allOrdersUser[index].customerName)),
+                                        .allOrdersProvince[index]
+                                        .customerName)),
                                 Expanded(
                                     child: Text(orderController
-                                        .allOrdersUser[index].deliveryToCity)),
+                                        .allOrdersProvince[index]
+                                        .deliveryToCity)),
                                 Expanded(
                                     child: Text(orderController
-                                        .allOrdersUser[index]
+                                        .allOrdersProvince[index]
                                         .amountAfterDelivery
                                         .toString())),
-
                                 Expanded(
                                     child: InkWell(
                                   onTap: () {
@@ -249,7 +246,7 @@ class TableByUserId extends StatelessWidget {
                                         confirmTextColor: Colors.white,
                                         onConfirm: () {
                                           orderModel = orderController
-                                              .allOrdersUser[index];
+                                              .allOrdersProvince[index];
 
                                           orderModel.deliveryCost = int.parse(
                                               deliveryCostController.text);
@@ -259,9 +256,10 @@ class TableByUserId extends StatelessWidget {
                                           FireDb().updateOrderByUserId(
                                               order: orderModel,
                                               clientId: orderController
-                                                  .clientId.value,
+                                                  .allOrdersProvince[index]
+                                                  .byUserId,
                                               uid: orderController
-                                                  .allOrdersUser[index]
+                                                  .allOrdersProvince[index]
                                                   .orderId);
 
                                           /*orderController.streamStatus(
@@ -277,36 +275,39 @@ class TableByUserId extends StatelessWidget {
                                               sortingByName: orderController
                                                   .orderBySortingName.value);*/
 
-                                          // print(_listOption[_valueOBX.value]);
+                                          print(orderController
+                                              .allOrdersProvince[index]
+                                              .byUserId);
                                           Get.back();
                                         },
                                         title:
-                                            'تغير سعر النقل ${orderController.allOrdersUser[index].orderNumber} إلى ',
+                                            'تغير سعر النقل ${orderController.allOrdersProvince[index].orderNumber} إلى ',
                                         content: TextField(
                                           controller: deliveryCostController,
                                         ));
                                   },
                                   child: Text(orderController
-                                      .allOrdersUser[index].deliveryCost
+                                      .allOrdersProvince[index].deliveryCost
                                       .toString()),
                                 )),
                                 Expanded(
                                   child: Text(
                                     DateFormat('yyyy-MM-dd').format(
-                                        orderController
-                                            .allOrdersUser[index].dateCreated
+                                        orderController.allOrdersProvince[index]
+                                            .dateCreated
                                             .toDate()),
                                   ),
                                 ),
                                 Expanded(
                                     child: Text(orderController
-                                        .allOrdersUser[index].status)),
+                                        .allOrdersProvince[index].status)),
+
                                 // هنا قسم الحالة وعن طريقة يمكن تغير الحاله
                                 Expanded(
                                     child: InkWell(
                                   onTap: () {
                                     // print(orderController
-                                    //     .allOrders[index].orderId);
+                                    //     .allOrdersProvince[index].orderId);
                                     // print(orderStatusOBX);
                                     // print(_valueOBX.value);
                                     // print('orderTitleStatusOBX ' +
@@ -315,7 +316,7 @@ class TableByUserId extends StatelessWidget {
                                     _valueOBX.value = 0;
                                     orderTitleStatusOBX.value = '';
                                     statusTitleController.text = '';
-                                    // orderStatusOBX.value = 'واصل';
+                                    orderStatusOBX.value = 'واصل';
 
                                     Get.defaultDialog(
 
@@ -326,7 +327,7 @@ class TableByUserId extends StatelessWidget {
                                         confirmTextColor: Colors.white,
                                         onConfirm: () {
                                           orderModel = orderController
-                                              .allOrdersUser[index];
+                                              .allOrdersProvince[index];
 
                                           orderModel.status =
                                               _listOption[_valueOBX.value];
@@ -341,10 +342,9 @@ class TableByUserId extends StatelessWidget {
 
                                           FireDb().updateOrderByUserId(
                                               order: orderModel,
-                                              clientId: orderController
-                                                  .clientId.value,
+                                              clientId: orderModel.byUserId,
                                               uid: orderController
-                                                  .allOrdersUser[index]
+                                                  .allOrdersProvince[index]
                                                   .orderId);
 
                                           updateLayout();
@@ -362,11 +362,15 @@ class TableByUserId extends StatelessWidget {
                                               sortingByName: orderController
                                                   .orderBySortingName.value);*/
 
+                                          print('orderController orderStatus:' +
+                                              orderController
+                                                  .orderStatusByUser.value);
+
                                           print(_listOption[_valueOBX.value]);
                                           Get.back();
                                         },
                                         title:
-                                            'تغير حالة الطلب ${orderController.allOrdersUser[index].orderNumber} إلى :',
+                                            'تغير حالة الطلب ${orderController.allOrdersProvince[index].orderNumber} إلى :',
                                         content: Column(
                                           children: <Widget>[
                                             for (int i = 0;
@@ -419,11 +423,11 @@ class TableByUserId extends StatelessWidget {
                                           ],
                                         ),
                                         middleText: orderController
-                                            .allOrdersUser[index].orderId);
+                                            .allOrdersProvince[index].orderId);
                                   },
                                   child: Container(
                                     child: Text(orderController
-                                        .allOrdersUser[index].statusTitle),
+                                        .allOrdersProvince[index].statusTitle),
                                     color: Colors.lightBlueAccent,
                                   ),
                                 ))
@@ -492,13 +496,15 @@ class TableByUserId extends StatelessWidget {
         child: Text(title),
       ),
       onPressed: () {
-        controller.orderStatusByUser.value = status;
+        controller.orderStatusByProvince.value = status;
         // orderStatus.value = status;
-        // myStatus = status;
 
-        controller.streamOrdersByUserAndStatus(
-            status: status, clientId: orderController.clientId.value);
+        controller.streamOrdersByProvinceAndStatus(
+            status: status,
+            deliveryToCity: orderController.deliveryToCity.value);
 
+        print('orderController orderStatus:' +
+            controller.orderStatusByProvince.value);
         /*  getAllAmount(status: status);*/
       },
     );
@@ -514,10 +520,13 @@ class TableByUserId extends StatelessWidget {
         onTap: () {
           controller.orderBySortingName.value = engTitle;
 
-          controller.streamOrdersByUserAndStatus(
-              orderByName: engTitle,
-              status: orderController.orderStatusByUser.value,
-              clientId: controller.clientId.value);
+          // controller.streamStatus(
+          //     orderByName: engTitle,
+          //     status: controller.orderStatus.value,
+          //     clientId: controller.clientId.value);
+
+          print('orderController orderStatus:' +
+              controller.orderStatusByUser.value);
         },
         child: Text(arbTitle),
       ),
